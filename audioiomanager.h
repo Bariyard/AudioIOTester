@@ -1,5 +1,7 @@
 #ifndef AUDIOIOMANAGER_H
 #define AUDIOIOMANAGER_H
+#include "audiodevicebase.h"
+
 
 class AudioIOManager
 {
