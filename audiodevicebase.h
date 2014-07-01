@@ -2,18 +2,32 @@
 #define AUDIODEVICEBASE_H
 
 #include "portaudio.h"
+#include <QString>
+#include <QDebug>
 
 class AudioDeviceBase
 {
 public:
-    virtual ~AudioDeviceBase() = 0;
-    virtual void Initialize() = 0;
-    virtual void Start() = 0;
-    virtual void Stop() = 0;
-    virtual void Destroy() = 0;
+    AudioDeviceBase();
+    ~AudioDeviceBase();
+    //Streaming function
+    void Initialize();
+    void Terminate();
 
 
+private:
 
+    //portAudio version
+    QString m_strVersion;
+    int32_t m_nVersion;
+
+    //Portaudio Devices
+    int32_t m_nDevices;
+
+    //PaStream
+    PaStreamParameters inputParameters;
+    PaStreamParameters outputParameters;
+    PaError error;
 };
 
 #endif // AUDIODEVICEBASE_H
