@@ -15,15 +15,19 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    audioiomanager.cpp \
-    audiodevicebase.cpp
+    audiodevicebase.cpp \
+    observer.cpp \
+    audiopreferencedialog.cpp
 
 HEADERS  += mainwindow.h \
-    audioiomanager.h \
-    audiodevicebase.h
+    audiodevicebase.h \
+    observer.h \
+    audiopreferencedialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    audiopreferencedialog.ui
 
-INCLUDEPATH += '/Users/bariyard/Developer/portaudio/include'
-LIBS += -L/Users/bariyard/Developer/portaudio/lib -lportaudio
+#include(3rdParties/portaudio)
+INCLUDEPATH += '3rdParties/portaudio/include'
+LIBS += -L/usr/local/lib -lportaudio
 

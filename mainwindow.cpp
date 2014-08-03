@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "audioiomanager.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -8,9 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    AudioIOManager *audioIOManager = new AudioIOManager();
-    delete audioIOManager;
 }
 
 MainWindow::~MainWindow()
