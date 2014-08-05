@@ -4,6 +4,7 @@
 #include "observer.h"
 #include "audiodevicebase.h"
 #include <QDialog>
+#include <QPointer>
 
 namespace Ui {
 class AudioPreferenceDialog;
@@ -16,7 +17,7 @@ class AudioPreferenceDialog :
     Q_OBJECT
 
 public:
-    explicit AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* s = NULL);
+    AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* s = NULL);
     virtual ~AudioPreferenceDialog();
 
     virtual void Update(Subject * theChangedSubject);
@@ -25,7 +26,10 @@ public:
 
 private:
     Ui::AudioPreferenceDialog *ui;
+    QString m_strWindowTitle;
     AudioDeviceBase *_subject;
+
+    void RetriveInformation();
 };
 
 #endif // AUDIOPREFERENCEDIALOG_H

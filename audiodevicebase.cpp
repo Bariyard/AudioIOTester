@@ -1,9 +1,16 @@
 #include "audiodevicebase.h"
 
-static double standardSampleRates[] = {
+int MIN_BUFFERSIZE = 14;
+int MAX_BUFFERSIZE = 2048;
+
+double STANDARD_SAMPLERATE[] = {
     8000.0, 9600.0, 11025.0, 12000.0, 16000.0, 22050.0, 24000.0, 32000.0,
     44100.0, 48000.0, 88200.0, 96000.0, 192000.0, -1 /* negative terminated  list */
 };
+
+int default_bufferSize = 2048;
+double default_sampleRate = 44100.0;
+
 
 
 AudioDeviceBase::AudioDeviceBase()
@@ -75,13 +82,48 @@ void AudioDeviceBase::Initialize(){
         outputParameters.device                     = i;
         outputParameters.channelCount               = deviceInfo->maxOutputChannels;
         outputParameters.sampleFormat               = paInt16;
-        outputParameters.suggestedLatency           = 0;
+        outputParameters.suggestedLatency           = Pa_GetDeviceInfo( outputParameters.device )->defaultLowOutputLatency;
         outputParameters.hostApiSpecificStreamInfo  = NULL;
 
     }
+
+
 
 }
 
 void AudioDeviceBase::Terminate(){
     Pa_Terminate();
+}
+
+
+void AudioDeviceBase::StartStream()
+{
+
+}
+
+void AudioDeviceBase::StopStream()
+{
+
+}
+
+double* AudioDeviceBase::get_AvailableSamplingRate()
+{
+    return STANDARD_SAMPLERATE;
+}
+
+
+void AudioDeviceBase::get_AvailableBufferSize(int &minBufferSize, int &maxBufferSize)
+{
+    minBufferSize = MIN_BUFFERSIZE;
+    maxBufferSize = MAX_BUFFERSIZE;
+}
+
+void AudioDeviceBase::get_DefaultBufferSize(int &bufferSize)
+{
+    bufferSize = default_bufferSize;
+}
+
+void AudioDeviceBase::get_DefaultSamplingRate(double &samplingRate)
+{
+    samplingRate = default_sampleRate;
 }

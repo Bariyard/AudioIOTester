@@ -18,8 +18,10 @@ public:
     //AudioDeviceBase Interface
     void get_AudioInputList();
     void get_AudioOutputList();
-    void get_AvailableSamplingRate();
-    void get_AvailableBufferSize();
+    double* get_AvailableSamplingRate();
+    void get_AvailableBufferSize(int &minBufferSize, int &maxBufferSize);
+    void get_DefaultBufferSize(int &bufferSize);
+    void get_DefaultSamplingRate(double &samplingRate);
 
 private:
     //Streaming function
@@ -34,6 +36,7 @@ private:
     int32_t m_nDevices;
 
     //PaStream
+    PaStream*           stream;
     PaStreamParameters inputParameters;
     PaStreamParameters outputParameters;
     PaError error;
