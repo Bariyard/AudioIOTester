@@ -16,6 +16,7 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* s)
         s->Attach(this);
     }
     RetriveInformation();
+    _subject->StartStream();
 }
 
 AudioPreferenceDialog::~AudioPreferenceDialog()
@@ -34,6 +35,21 @@ void AudioPreferenceDialog::Update(Subject* theChangedSubject)
 
 void AudioPreferenceDialog::RetriveInformation()
 {
+    //Set Audio Device List
+    QList<AudioDevice> *device;
+    device = _subject->get_AudioDeviceList();
+    for (int i = 0; i < device->size(); ++i)
+    {
+        if (device->at(i).isInputOrOutput) //true means input
+        {
+            ui->AudioInputComboBox->addItem(device->at(i).name, device->at(i).index);
+        }
+        else
+        {
+            ui->AudioOutputComboBox->addItem(device->at(i).name, device->at(i).index);
+        }
+    }
+
     //Sampling Rate
     double *samplingRate;
     samplingRate = _subject->get_AvailableSamplingRate();
@@ -62,5 +78,14 @@ void AudioPreferenceDialog::RetriveInformation()
         QString valueAsString = QString::number(default_bufferSize);
         ui->BufferSizeValueLabel->setText(valueAsString);
 
-
+    //Bit Resolution
+    int *bitResolution;
+    bitResolution = _subject->get_BitResolution();
+    while(*bitResolution != -1){
+        QString valueAsString = QString::number(*bitResolution);
+        valueAsString += " bit";
+        //Put to UI
+        ui->BitResolutionComboBox->addItem(valueAsString,*bitResolution);
+        bitResolution++;
+    }
 }
