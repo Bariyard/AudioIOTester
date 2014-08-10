@@ -21,6 +21,15 @@ struct AudioDevice{
     bool    isDefault;
 };
 
+typedef struct
+{
+    double *data;
+    int left_phase;
+    int right_phase;
+    unsigned int framesToGo;
+}
+AudioData;
+
 
 class AudioDeviceBase : public Subject
 {
@@ -44,15 +53,20 @@ public:
     //data table
     void AdjustDataTable();
 
-
-    //Callback
-    static int PortAudioCallback( const void *inputBuffer,
-                                  void *outputBuffer,
-                                  unsigned long framesPerBuffer,
-                                  const PaStreamCallbackTimeInfo* timeInfo,
-                                  PaStreamCallbackFlags statusFlags,
-                                  void *userData );
 private:
+    //Callback
+    int paCallbackMethod(const void *inputBuffer, void *outputBuffer,
+                        unsigned long framesPerBuffer,
+                        const PaStreamCallbackTimeInfo* timeInfo,
+                        PaStreamCallbackFlags statusFlags);
+
+    static int paCallback( const void *inputBuffer, void *outputBuffer,
+                            unsigned long framesPerBuffer,
+                            const PaStreamCallbackTimeInfo* timeInfo,
+                            PaStreamCallbackFlags statusFlags,
+                            void *userData );
+
+
     //Streaming function
     void Initialize();
     void Terminate();
@@ -82,9 +96,11 @@ private:
     PaSampleFormat      m_paDefaultSampleFormat;
     double              m_dblDefaultSampleRates;
     int                 m_nDefaultBufferSize;
+    //int                 m_nDefaultBitRate;
 
     void SetData();
-    double             *m_dblData;
+
+    AudioData           *m_SAudioData;
 
 };
 

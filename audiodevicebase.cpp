@@ -10,7 +10,9 @@ int BIT_RESOLUTION[] = {
     8, 16, 32, 64, -1 /* negative terminated  list */
 };
 
-static unsigned int          tempPhase = 0;
+#ifndef M_PI
+#define M_PI (3.14159265)
+#endif
 
 AudioDeviceBase::AudioDeviceBase():
 
@@ -25,11 +27,10 @@ AudioDeviceBase::AudioDeviceBase():
 
     m_nDefaultInputNumberOfChanel(2),
     m_nDefaultOutputNumberOfChanel(2),
-    m_paDefaultSampleFormat(paInt32),
+    m_paDefaultSampleFormat(paFloat32),
     m_dblDefaultSampleRates(44100.0),
-    m_nDefaultBufferSize(2048),
-
-    m_dblData(NULL)
+    m_nDefaultBufferSize(2048)
+    //m_nDefaultBitRate(541696) //541696
 
 {
     Initialize();
@@ -57,8 +58,8 @@ void AudioDeviceBase::Terminate(){
     StopStream();
     m_paError = Pa_CloseStream(m_paStream);
     Pa_Terminate();
-    if(m_dblData)
-        delete m_dblData;
+    if(m_SAudioData)
+        delete m_SAudioData;
 }
 
 
@@ -66,58 +67,72 @@ void AudioDeviceBase::OpenStream()
 {
     if( m_paError == paNoError )
     {
-        m_paError = Pa_OpenStream(  &m_paStream,
-                                    &m_paInputParameters,      /* No input. */
+        m_paError = Pa_OpenStream(
+                                    &m_paStream,
+                                    &m_paInputParameters, /* no input */
                                     &m_paOutputParameters,
                                     m_dblDefaultSampleRates,
-                                    m_nDefaultBufferSize,       /* Frames per buffer. */
-                                    paClipOff,                  /* We won't output out of range samples so don't bother clipping them. */
-                                    PortAudioCallback,
-                                    &m_dblData );
+                                    m_nDefaultBufferSize,
+                                    paClipOff, /* we won't output out of range samples so don't bother clipping them */
+                                    &AudioDeviceBase::paCallback,
+                                    this /* Using 'this' for userData so we can cast to Sine* in paCallback method */
+                                    );
     }
 
 }
 
 void AudioDeviceBase::AdjustDataTable()
 {
-    for(int i=0; i<m_nDefaultBufferSize; i++ )
+    for(int i=0; i<m_dblDefaultSampleRates; i++ )
     {
-        m_dblData[i] = (float) sin( ((double)i/(double)m_nDefaultBufferSize) * M_PI * 2. );
+        m_SAudioData->data[i] = (double) 0.6* sin(((double)i * (M_PI * 2.0) * (double)440.00 )/(double)m_dblDefaultSampleRates);
     }
 }
 
-int AudioDeviceBase::PortAudioCallback( const void *inputBuffer,
-                              void *outputBuffer,
-                              unsigned long framesPerBuffer,
-                              const PaStreamCallbackTimeInfo* timeInfo,
-                              PaStreamCallbackFlags statusFlags,
-                              void *userData )
+int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
+                    unsigned long framesPerBuffer,
+                    const PaStreamCallbackTimeInfo* timeInfo,
+                    PaStreamCallbackFlags statusFlags)
 {
-    int8_t *data = (int8_t*)userData;
-        float *out = (float*)outputBuffer;
-        float *in = (float*)inputBuffer;
-        unsigned long i;
+    float *out = (float*)outputBuffer;
+    unsigned long i;
 
-        (void) timeInfo; /* Prevent unused variable warnings. */
-        (void) statusFlags;
-        (void) inputBuffer;
+    (void) timeInfo; /* Prevent unused variable warnings. */
+    (void) statusFlags;
+    (void) inputBuffer;
 
-        for( i=0; i<framesPerBuffer; i++ )
-        {
-            //*out++ = data[tempPhase];  /* left */
-            //*out++ = data[tempPhase];  /* right */
-            //tempPhase++;
-            //if(tempPhase >= framesPerBuffer) tempPhase -= framesPerBuffer;
-            //data->left_phase += 1;
-            //if( data->left_phase >= TABLE_SIZE ) data->left_phase -= TABLE_SIZE;
-            //data->right_phase += 3; /* higher pitch so we can distinguish left and right. */
-            //if( data->right_phase >= TABLE_SIZE ) data->right_phase -= TABLE_SIZE;
-            *out++ = *in++;
-            *out++ = *in++;
-        }
+    for( i=0; i<framesPerBuffer; i++ )
+    {
+        *out++ = m_SAudioData->data[m_SAudioData->left_phase]; /* left */
+        *out++ = m_SAudioData->data[m_SAudioData->right_phase]; /* right */
+        m_SAudioData->left_phase += 1;
+        if( m_SAudioData->left_phase >= m_dblDefaultSampleRates ) m_SAudioData->left_phase -= m_dblDefaultSampleRates;
+        m_SAudioData->right_phase += 1; /* higher pitch so we can distinguish left and right. */
+        if( m_SAudioData->right_phase >= m_dblDefaultSampleRates ) m_SAudioData->right_phase -= m_dblDefaultSampleRates;
+    }
 
     return paContinue;
 }
+
+/* This routine will be called by the PortAudio engine when audio is needed.
+** It may called at interrupt level on some machines so don't do anything
+** that could mess up the system like calling malloc() or free().
+*/
+int AudioDeviceBase::paCallback( const void *inputBuffer, void *outputBuffer,
+                        unsigned long framesPerBuffer,
+                        const PaStreamCallbackTimeInfo* timeInfo,
+                        PaStreamCallbackFlags statusFlags,
+                        void *userData )
+{
+    /* Here we cast userData to Sine* type so we can call the instance method paCallbackMethod, we can do that since
+    we called Pa_OpenStream with 'this' for userData */
+    return ((AudioDeviceBase*)userData)->paCallbackMethod(inputBuffer, outputBuffer,
+    framesPerBuffer,
+    timeInfo,
+    statusFlags);
+}
+
+
 
 void AudioDeviceBase::StartStream()
 {
@@ -217,7 +232,11 @@ void AudioDeviceBase::SetDefaultAudioIODevice()
 
 void AudioDeviceBase::SetData()
 {
-    m_dblData = new double[m_nDefaultBufferSize];
+    m_SAudioData = new AudioData;
+    m_SAudioData->data       = new double[(int)m_dblDefaultSampleRates];
+    m_SAudioData->left_phase = 0;
+    m_SAudioData->right_phase = 0;
+    m_SAudioData->framesToGo = 0;
 }
 
 QList<AudioDevice>* AudioDeviceBase::get_AudioDeviceList()
