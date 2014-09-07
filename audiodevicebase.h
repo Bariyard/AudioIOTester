@@ -23,7 +23,7 @@ struct AudioDevice{
 
 typedef struct
 {
-    double *data;
+    float *data;
     int left_phase;
     int right_phase;
     unsigned int framesToGo;
@@ -52,6 +52,13 @@ public:
 
     //data table
     void AdjustDataTable();
+    void put_InputDevice(int nDevice, bool bIsStreamActive = false);
+    void put_OutputDevice(int nDevice, bool bIsStreamActive = false);
+    void put_SamplingRate(int nSamplingRate, bool bIsStreamActive = false);
+    void put_BufferSize(int nBufferSize, bool bIsStreamActive = false);
+    void put_BitResoulution(int nBitResolution);
+    void put_AudioFrequency(double dblFrequency);
+
 
 private:
     //Callback
@@ -75,6 +82,7 @@ private:
     //Portaudio Information
     void RetrivePortAudioInformation();
     void SetDefaultAudioIODevice();
+    void ShowDeviceInfo(const PaStreamParameters paStream);
     QString             m_strPortaudioVersion;
     int                 m_nPortaudioVersion;
     int                 m_nNumberOfDevices;
@@ -89,13 +97,15 @@ private:
 
     int                 m_nMinBufferSize;
     int                 m_nMaxBufferSize;
+    double              m_dblAudioFrequency;
 
     //Default value
     int                 m_nDefaultInputNumberOfChanel;
     int                 m_nDefaultOutputNumberOfChanel;
     PaSampleFormat      m_paDefaultSampleFormat;
-    double              m_dblDefaultSampleRates;
-    int                 m_nDefaultBufferSize;
+    double              m_dblSampleRates;
+    unsigned int        m_nBufferSize;
+    double              m_dblDefaultAudioFrequency;
     //int                 m_nDefaultBitRate;
 
     void SetData();

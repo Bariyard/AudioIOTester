@@ -23,13 +23,26 @@ public:
     virtual void Update(Subject * theChangedSubject);
         //Overide observer operation
 
+public slots:
+    void StartAudioTest(bool bStartTest);
+    void ChangeInputDevice(int nSelectedItem);
+    void ChangeOutputDevice(int nSelectedItem);
+    void ChangeSamplingRate(int nSelectedItem);
+    void ChangeBufferSize(int nBufferSize);
+
+    //Synthesizer
+    void ChangeBitResolution(int nBitResolution);
+    void ChangeFrequency(int dblFrequency);
 
 private:
     Ui::AudioPreferenceDialog *ui;
-    QString m_strWindowTitle;
-    AudioDeviceBase *_subject;
+    QString             m_strWindowTitle;
+    AudioDeviceBase     *_subject;
+
+    bool                m_bIsTesting;
 
     void RetriveInformation();
+    void Connect();
 };
 
 #endif // AUDIOPREFERENCEDIALOG_H

@@ -5,7 +5,8 @@
 AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* s) :
     QDialog(parent),
     ui(new Ui::AudioPreferenceDialog),
-    _subject(NULL)
+    _subject(NULL),
+    m_bIsTesting(false)
 {
     ui->setupUi(this);
     setFixedSize(this->size());
@@ -16,7 +17,8 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* s)
         s->Attach(this);
     }
     RetriveInformation();
-    _subject->StartStream();
+    Connect();
+
 }
 
 AudioPreferenceDialog::~AudioPreferenceDialog()
@@ -88,4 +90,81 @@ void AudioPreferenceDialog::RetriveInformation()
         ui->BitResolutionComboBox->addItem(valueAsString,*bitResolution);
         bitResolution++;
     }
+
+    ui->FrequencySlider->setRange((int)16.35,(int)7902.13);
 }
+
+
+void AudioPreferenceDialog::Connect()
+{
+    connect(ui->AudioInputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeInputDevice(int)));
+    connect(ui->AudioOutputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeOutputDevice(int)));
+    connect(ui->SamplingRateComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeSamplingRate(int)));
+    connect(ui->BufferSizeSlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeBufferSize(int)));
+    connect(ui->BitResolutionComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBitResolution(int)));
+    connect(ui->FrequencySlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeFrequency(int)));
+
+    connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
+}
+
+void AudioPreferenceDialog::StartAudioTest(bool bStartTest)
+{
+    qDebug() << "StartTest: " << bStartTest;
+    if(!m_bIsTesting)
+        _subject->StartStream();
+    else
+        _subject->StopStream();
+    m_bIsTesting = !m_bIsTesting;
+}
+void AudioPreferenceDialog::ChangeInputDevice(int nSelectedItem)
+{
+    QVariant varDevice;
+    int nDevice;
+
+    varDevice = ui->AudioInputComboBox->itemData(nSelectedItem);
+    nDevice = varDevice.toInt();
+    qDebug() << "ChangeInputDevice: " << nDevice;
+    _subject->put_InputDevice(nDevice,m_bIsTesting);
+}
+
+void AudioPreferenceDialog::ChangeOutputDevice(int nSelectedItem)
+{
+    QVariant varDevice;
+    int nDevice;
+
+    varDevice = ui->AudioOutputComboBox->itemData(nSelectedItem);
+    nDevice = varDevice.toInt();
+    qDebug() << "ChangeOutputDevice: " << nDevice;
+    _subject->put_OutputDevice(nDevice,m_bIsTesting);
+}
+
+void AudioPreferenceDialog::ChangeSamplingRate(int nSelectedItem)
+{
+    qDebug() << "ChangeSamplingRate: "<< nSelectedItem;
+    _subject->put_SamplingRate(nSelectedItem,m_bIsTesting);
+}
+
+void AudioPreferenceDialog::ChangeBufferSize(int nBufferSize)
+{
+    qDebug() << "ChangeBufferSize: "<< nBufferSize;
+    _subject->put_BufferSize(nBufferSize);
+    ui->BufferSizeValueLabel->setText(QString::number(nBufferSize));
+
+    _subject->put_BufferSize(nBufferSize,m_bIsTesting);
+}
+
+//Synthesizer
+void AudioPreferenceDialog::ChangeBitResolution(int nBitRes)
+{
+    qDebug() << "ChangeBitResolution: " << nBitRes;
+    _subject->put_BitResoulution(nBitRes);
+
+}
+
+void AudioPreferenceDialog::ChangeFrequency(int nFreq)
+{
+    qDebug() << "ChangeFrequency: " << nFreq;
+    _subject->put_AudioFrequency(nFreq);
+    ui->FrequencyValueLabel->setText(QString::number(nFreq));
+}
+

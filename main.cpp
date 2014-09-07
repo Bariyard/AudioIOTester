@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     //MainWindow w;
     //w.show();
 
-    AudioDeviceBase *audioDeviceBase = new AudioDeviceBase;
+    AudioDeviceBase *audioDeviceBase = new AudioDeviceBase();
     AudioPreferenceDialog *audioPrefDialog = new AudioPreferenceDialog(0,audioDeviceBase);
     audioPrefDialog->show();
     return a.exec();
