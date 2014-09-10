@@ -353,6 +353,14 @@ void AudioDeviceBase::put_BufferSize(int nBufferSize, bool bIsStreamActive)
     {
         m_nBufferSize = nBufferSize;
     }
+    if(bIsStreamActive)
+       StopStream();
+    Pa_CloseStream(m_paStream);
+
+    OpenStream();
+    if(bIsStreamActive)
+        StartStream();
+
 }
 
 

@@ -75,10 +75,11 @@ void AudioPreferenceDialog::RetriveInformation()
     if(min_BufferSize != 0 && max_BufferSize != 0)
         ui->BufferSizeSlider->setRange(min_BufferSize, max_BufferSize);
 
-        int default_bufferSize = 0 ;
-        _subject->get_DefaultBufferSize(default_bufferSize);
-        QString valueAsString = QString::number(default_bufferSize);
-        ui->BufferSizeValueLabel->setText(valueAsString);
+    int default_bufferSize = 0 ;
+    _subject->get_DefaultBufferSize(default_bufferSize);
+    QString valueAsString = QString::number(default_bufferSize);
+    ui->BufferSizeValueLabel->setText(valueAsString);
+    ui->BufferSizeApplyPushButton->setVisible(false);
 
     //Bit Resolution
     int *bitResolution;
@@ -100,7 +101,9 @@ void AudioPreferenceDialog::Connect()
     connect(ui->AudioInputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeInputDevice(int)));
     connect(ui->AudioOutputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeOutputDevice(int)));
     connect(ui->SamplingRateComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeSamplingRate(int)));
-    connect(ui->BufferSizeSlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeBufferSize(int)));
+    connect(ui->BufferSizeSlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeBufferSizeSlider(int)));
+    connect(ui->BufferSizeApplyPushButton,SIGNAL(clicked(bool)),this,SLOT(ChangeBufferSize()));
+
     connect(ui->BitResolutionComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBitResolution(int)));
     connect(ui->FrequencySlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeFrequency(int)));
 
@@ -144,12 +147,19 @@ void AudioPreferenceDialog::ChangeSamplingRate(int nSelectedItem)
     _subject->put_SamplingRate(nSelectedItem,m_bIsTesting);
 }
 
-void AudioPreferenceDialog::ChangeBufferSize(int nBufferSize)
+void AudioPreferenceDialog::ChangeBufferSizeSlider(int nBufferSize)
 {
-    qDebug() << "ChangeBufferSize: "<< nBufferSize;
-    _subject->put_BufferSize(nBufferSize);
-    ui->BufferSizeValueLabel->setText(QString::number(nBufferSize));
+    if(!ui->BufferSizeApplyPushButton->isVisible())
+        ui->BufferSizeApplyPushButton->setVisible(true);
 
+    ui->BufferSizeValueLabel->setText(QString::number(nBufferSize));
+}
+
+void AudioPreferenceDialog::ChangeBufferSize()
+{
+    int nBufferSize = ui->BufferSizeSlider->value();
+    qDebug() << "ChangeBufferSize: "<< nBufferSize;
+    ui->BufferSizeApplyPushButton->setVisible(false);
     _subject->put_BufferSize(nBufferSize,m_bIsTesting);
 }
 

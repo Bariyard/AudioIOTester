@@ -103,7 +103,7 @@
        <item>
         <layout class="QHBoxLayout" name="BufferSizeLayout">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <layout class="QHBoxLayout" name="BufferSizeHorizontalLayout_1">
            <item>
             <widget class="QLabel" name="BufferSizeLabel">
              <property name="sizePolicy">
@@ -133,7 +133,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <layout class="QHBoxLayout" name="BufferSizeHorizontalLayout_2">
            <item>
             <widget class="QSlider" name="BufferSizeSlider">
              <property name="sizePolicy">
@@ -262,7 +262,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QTabWidget" name="tabWidget">
+      <widget class="QTabWidget" name="TestingTabWidget">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -299,11 +299,11 @@
           <number>5</number>
          </property>
          <item row="0" column="0">
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QVBoxLayout" name="SynthesizerVerticalLayout">
            <item>
-            <layout class="QHBoxLayout" name="BufferSizeLayout_2">
+            <layout class="QHBoxLayout" name="FrequencyLayout">
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
+              <layout class="QHBoxLayout" name="FrequencyHorizontalLayout">
                <item>
                 <widget class="QLabel" name="FrequencyLabel">
                  <property name="sizePolicy">
@@ -402,7 +402,6 @@
          </item>
         </layout>
         <zorder></zorder>
-        <zorder>verticalLayoutWidget_3</zorder>
        </widget>
       </widget>
      </item>

@@ -28,7 +28,8 @@ public slots:
     void ChangeInputDevice(int nSelectedItem);
     void ChangeOutputDevice(int nSelectedItem);
     void ChangeSamplingRate(int nSelectedItem);
-    void ChangeBufferSize(int nBufferSize);
+    void ChangeBufferSize();
+    void ChangeBufferSizeSlider(int nBufferSize);
 
     //Synthesizer
     void ChangeBitResolution(int nBitResolution);
