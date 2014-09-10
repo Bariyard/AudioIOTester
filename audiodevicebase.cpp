@@ -73,7 +73,7 @@ void AudioDeviceBase::OpenStream()
                                     &m_paInputParameters, /* no input */
                                     &m_paOutputParameters,
                                     m_dblSampleRates,
-                                    paFramesPerBufferUnspecified,
+                                    m_nBufferSize,
                                     paClipOff|paDitherOff, /* we won't output out of range samples so don't bother clipping them */
                                     &AudioDeviceBase::paCallback,
                                     this /* Using 'this' for userData so we can cast to Sine* in paCallback method */
@@ -349,13 +349,12 @@ void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
 
 void AudioDeviceBase::put_BufferSize(int nBufferSize, bool bIsStreamActive)
 {
-
     if(nBufferSize >= m_nMinBufferSize && nBufferSize <= m_nMaxBufferSize)
     {
         m_nBufferSize = nBufferSize;
-
     }
 }
+
 
 void AudioDeviceBase::put_BitResoulution(int nBitResolution)
 {
