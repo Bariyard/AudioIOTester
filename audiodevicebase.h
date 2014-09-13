@@ -6,13 +6,6 @@
 #include <QString>
 #include <QDebug>
 
-enum AudioBitDepth{
-    AudioBitDepthunknown    = 0,
-    AudioBitDepth8Bit       = 1,
-    AudioBitDepth16Bit      = 2,
-    AudioBitDepth32Bit      = 3,
-    AudioBitDepth64Bit      = 4
-};
 
 struct AudioDevice{
     QString name;
@@ -48,16 +41,19 @@ public:
     int* get_BitResolution();
     void get_DefaultBufferSize(int &bufferSize);
     void get_DefaultSamplingRate(double &samplingRate);
+    int get_SamplingRate();
 
 
     //data table
-    void AdjustDataTable();
+    //void AdjustDataTable();
     void put_InputDevice(int nDevice, bool bIsStreamActive = false);
     void put_OutputDevice(int nDevice, bool bIsStreamActive = false);
     void put_SamplingRate(int nSamplingRate, bool bIsStreamActive = false);
     void put_BufferSize(int nBufferSize, bool bIsStreamActive = false);
     void put_BitResoulution(int nBitResolution);
-    void put_AudioFrequency(double dblFrequency);
+    //void put_AudioFrequency(double dblFrequency);
+
+    void put_DataTable(const AudioData *audioData);
 
 
 private:
@@ -97,7 +93,6 @@ private:
 
     int                 m_nMinBufferSize;
     int                 m_nMaxBufferSize;
-    double              m_dblAudioFrequency;
 
     //Default value
     int                 m_nDefaultInputNumberOfChanel;
@@ -105,7 +100,6 @@ private:
     PaSampleFormat      m_paDefaultSampleFormat;
     double              m_dblSampleRates;
     unsigned int        m_nBufferSize;
-    double              m_dblDefaultAudioFrequency;
     //int                 m_nDefaultBitRate;
 
     void SetData();

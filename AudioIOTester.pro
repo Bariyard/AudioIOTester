@@ -17,12 +17,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     audiodevicebase.cpp \
     observer.cpp \
-    audiopreferencedialog.cpp
+    audiopreferencedialog.cpp \
+    synthesizer.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
     observer.h \
-    audiopreferencedialog.h
+    audiopreferencedialog.h \
+    synthesizer.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui

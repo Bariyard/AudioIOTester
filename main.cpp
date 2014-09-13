@@ -3,6 +3,7 @@
 #include "audiodevicebase.h"
 #include <QDebug>
 #include "audiopreferencedialog.h"
+#include "synthesizer.h"
 
 void test();
 
@@ -14,7 +15,8 @@ int main(int argc, char *argv[])
     //w.show();
 
     AudioDeviceBase *audioDeviceBase = new AudioDeviceBase();
-    AudioPreferenceDialog *audioPrefDialog = new AudioPreferenceDialog(0,audioDeviceBase);
+    Synthesizer *synthesizer = new Synthesizer(audioDeviceBase);
+    AudioPreferenceDialog *audioPrefDialog = new AudioPreferenceDialog(0,audioDeviceBase,synthesizer);
     audioPrefDialog->show();
     return a.exec();
 }

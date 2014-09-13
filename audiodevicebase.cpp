@@ -1,5 +1,5 @@
 #include "audiodevicebase.h"
-#include <math.h>
+
 
 double STANDARD_SAMPLERATE[] = {
     8000.0, 9600.0, 11025.0, 12000.0, 16000.0, 22050.0, 24000.0, 32000.0,
@@ -10,10 +10,6 @@ int BIT_RESOLUTION[] = {
     8, 16, 32, 64, -1 /* negative terminated  list */
 };
 
-#ifndef M_PI
-#define M_PI (3.14159265)
-#endif
-
 AudioDeviceBase::AudioDeviceBase():
     m_strPortaudioVersion(""),
     m_nPortaudioVersion(0),
@@ -23,14 +19,12 @@ AudioDeviceBase::AudioDeviceBase():
 
     m_nMinBufferSize(14),
     m_nMaxBufferSize(2048),
-    m_dblAudioFrequency(440.00),
 
     m_nDefaultInputNumberOfChanel(2),
     m_nDefaultOutputNumberOfChanel(2),
     m_paDefaultSampleFormat(paFloat32),
     m_dblSampleRates(44100.0),
-    m_nBufferSize(2048),
-    m_dblDefaultAudioFrequency(440.00)
+    m_nBufferSize(2048)
     //m_nDefaultBitRate(541696) //541696
 
 {
@@ -48,7 +42,7 @@ void AudioDeviceBase::Initialize(){
         RetrivePortAudioInformation();
         SetDefaultAudioIODevice();
         SetData();
-        AdjustDataTable();
+        //AdjustDataTable();
 
         OpenStream();
         //StartStream();
@@ -80,14 +74,6 @@ void AudioDeviceBase::OpenStream()
                                     );
     }
 
-}
-
-void AudioDeviceBase::AdjustDataTable()
-{
-    for(int i=0; i<m_dblSampleRates; i++ )
-    {
-        m_SAudioData->data[i] = (double) 0.6* sin(((double)i * (M_PI * 2.0) * m_dblAudioFrequency )/(double)m_dblSampleRates);
-    }
 }
 
 int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
@@ -142,6 +128,7 @@ void AudioDeviceBase::StartStream()
     {
        m_paError = Pa_StartStream(m_paStream);
     }
+
 }
 
 void AudioDeviceBase::StopStream()
@@ -241,6 +228,14 @@ void AudioDeviceBase::SetData()
     m_SAudioData->framesToGo = 0;
 }
 
+void AudioDeviceBase::put_DataTable(const AudioData *audioData)
+{
+    for(int i=0; i<m_dblSampleRates; i++ )
+    {
+        m_SAudioData->data[i] = audioData->data[i];
+    }
+}
+
 QList<AudioDevice>* AudioDeviceBase::get_AudioDeviceList()
 {
     return &m_audioDevice;
@@ -271,6 +266,11 @@ void AudioDeviceBase::get_DefaultBufferSize(int &bufferSize)
 void AudioDeviceBase::get_DefaultSamplingRate(double &samplingRate)
 {
     samplingRate = m_dblSampleRates;
+}
+
+int AudioDeviceBase::get_SamplingRate()
+{
+   return  m_dblSampleRates;
 }
 
 void AudioDeviceBase::put_InputDevice(int nDevice, bool bIsStreamActive)
@@ -340,7 +340,7 @@ void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
         Pa_CloseStream(m_paStream);
 
         m_dblSampleRates = STANDARD_SAMPLERATE[nSamplingRate];
-        AdjustDataTable();
+        //AdjustDataTable();
         OpenStream();
         if(bIsStreamActive)
             StartStream();
@@ -374,13 +374,6 @@ void AudioDeviceBase::put_BitResoulution(int nBitResolution)
     qDebug() << "MacOSX 32bit";
 #endif
 }
-
-void AudioDeviceBase::put_AudioFrequency(double dblFrequency)
-{
-    m_dblAudioFrequency = dblFrequency;
-    AdjustDataTable();
-}
-
 
 void AudioDeviceBase::ShowDeviceInfo(const PaStreamParameters paStream)
 {

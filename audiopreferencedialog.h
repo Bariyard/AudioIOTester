@@ -1,8 +1,8 @@
 #ifndef AUDIOPREFERENCEDIALOG_H
 #define AUDIOPREFERENCEDIALOG_H
 
-#include "observer.h"
 #include "audiodevicebase.h"
+#include "synthesizer.h"
 #include <QDialog>
 #include <QPointer>
 
@@ -17,7 +17,7 @@ class AudioPreferenceDialog :
     Q_OBJECT
 
 public:
-    AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* s = NULL);
+    AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL, Synthesizer *synth = NULL);
     virtual ~AudioPreferenceDialog();
 
     virtual void Update(Subject * theChangedSubject);
@@ -38,7 +38,8 @@ public slots:
 private:
     Ui::AudioPreferenceDialog *ui;
     QString             m_strWindowTitle;
-    AudioDeviceBase     *_subject;
+    AudioDeviceBase     *m_AudioDeviceBase;\
+    Synthesizer         *m_Synth;
 
     bool                m_bIsTesting;
 
