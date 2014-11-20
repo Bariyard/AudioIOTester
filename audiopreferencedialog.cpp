@@ -176,6 +176,7 @@ void AudioPreferenceDialog::ChangeFrequency(int nFreq)
 {
     qDebug() << "ChangeFrequency: " << nFreq;
     //m_AudioDeviceBase->put_AudioFrequency(nFreq);
+    m_Synth->put_AudioFrequency(nFreq);
     ui->FrequencyValueLabel->setText(QString::number(nFreq));
 }
 

@@ -43,4 +43,5 @@ void Synthesizer::put_AudioFrequency(double dblFrequency)
 {
     m_dblAudioFrequency = dblFrequency;
     AdjustDataTable();
+    m_AudioDeviceBase->put_DataTable(m_SWaveData);
 }

@@ -38,7 +38,7 @@ public slots:
 private:
     Ui::AudioPreferenceDialog *ui;
     QString             m_strWindowTitle;
-    AudioDeviceBase     *m_AudioDeviceBase;\
+    AudioDeviceBase     *m_AudioDeviceBase;
     Synthesizer         *m_Synth;
 
     bool                m_bIsTesting;
