@@ -90,18 +90,11 @@ int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffe
     (void) statusFlags;
     (void) inputBuffer;
 
-//    for( i=0; i<framesPerBuffer; i++ )
-//    {
-//        //clear buffer
-//        out[i] = 0;
-//    }
-
     if(!m_TestModule.isEmpty()){
         foreach( TestModule *mod, m_TestModule ){
             mod->process(inputBuffer,outputBuffer,framesPerBuffer);
         }
     }
-
 
 //    for( i=0; i<framesPerBuffer; i++ )
 //    {

@@ -13,6 +13,8 @@ public:
     //process data one buffer at a time
     virtual void process(const void *inputBuffer, void *outputBuffer,
                          const unsigned long framesPerBuffer) = 0;
+    virtual bool isEnabled() = 0;
+
 signals:
 
 public slots:
