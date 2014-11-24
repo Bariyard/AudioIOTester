@@ -1,11 +1,12 @@
-#include "mainwindow.h"
 #include <QApplication>
-#include "audiodevicebase.h"
 #include <QDebug>
+#include "mainwindow.h"
+#include "audiodevicebase.h"
 #include "audiopreferencedialog.h"
 
 #include "testmodule.h"
 #include "synthesizer.h"
+#include "audioplayer.h"
 
 #include <QList>
 
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
 
     AudioDeviceBase *audioDeviceBase = new AudioDeviceBase();
     Synthesizer *synthesizer = new Synthesizer(audioDeviceBase);
-
+    AudioPlayer *audioPlayer   = new AudioPlayer(audioDeviceBase);
     AudioPreferenceDialog *audioPrefDialog = new AudioPreferenceDialog(0,audioDeviceBase,synthesizer);
     audioPrefDialog->show();
     return a.exec();

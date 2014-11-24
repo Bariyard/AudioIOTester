@@ -17,16 +17,6 @@ struct AudioDevice{
     bool    isDefault;
 };
 
-typedef struct
-{
-    float *data;
-    int left_phase;
-    int right_phase;
-    unsigned int framesToGo;
-}
-AudioData;
-
-
 class AudioDeviceBase : public QObject
 {
     Q_OBJECT
@@ -100,9 +90,6 @@ private:
     double              m_dblSampleRates;
     unsigned int        m_nBufferSize;
 
-    void SetData();
-
-    AudioData           *m_SAudioData;
     QList<TestModule*>   m_TestModule;
 };
 

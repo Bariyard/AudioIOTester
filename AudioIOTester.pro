@@ -20,13 +20,15 @@ SOURCES += main.cpp\
     audiodevicebase.cpp \
     audiopreferencedialog.cpp \
     synthesizer.cpp \
-    testmodule.cpp
+    testmodule.cpp \
+    audioplayer.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
     audiopreferencedialog.h \
     synthesizer.h \
-    testmodule.h
+    testmodule.h \
+    audioplayer.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui
@@ -35,3 +37,6 @@ FORMS    += mainwindow.ui \
 INCLUDEPATH += '3rdParties/portaudio/include'
 LIBS += -L/usr/local/lib -lportaudio
 
+#include(3rdParties/portaudio)
+INCLUDEPATH += '3rdParties/libsndfile/include'
+LIBS += -L/usr/local/lib -lsndfile

@@ -39,8 +39,6 @@ void AudioDeviceBase::Initialize(){
     {
         RetrivePortAudioInformation();
         SetDefaultAudioIODevice();
-        SetData();
-        //AdjustDataTable();
 
         OpenStream();
         //StartStream();
@@ -51,8 +49,7 @@ void AudioDeviceBase::Terminate(){
     StopStream();
     m_paError = Pa_CloseStream(m_paStream);
     Pa_Terminate();
-    if(m_SAudioData)
-        delete m_SAudioData;
+
 }
 
 
@@ -88,6 +85,12 @@ int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffe
     (void) statusFlags;
     (void) inputBuffer;
 
+    //clear buffer
+    for( i=0; i<framesPerBuffer; i++ ){
+        *out++ = 0.0;
+        *out++ = 0.0;
+    }
+
     if(!m_TestModule.isEmpty()){
         foreach( TestModule *mod, m_TestModule ){
             mod->process(inputBuffer,outputBuffer,framesPerBuffer);
@@ -103,7 +106,7 @@ int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffe
 //        //m_SAudioData->right_phase += 1; /* higher pitch so we can distinguish left and right. */
 //        //if( m_SAudioData->right_phase >= m_dblSampleRates ) m_SAudioData->right_phase -= m_dblSampleRates;
 //    }
-    qDebug() << framesPerBuffer;
+    //qDebug() << framesPerBuffer;
 
     return paContinue;
 }
@@ -223,15 +226,6 @@ void AudioDeviceBase::SetDefaultAudioIODevice()
     m_paOutputParameters.hostApiSpecificStreamInfo  = NULL;
 }
 
-void AudioDeviceBase::SetData()
-{
-    m_SAudioData = new AudioData;
-    m_SAudioData->data       = new float[(int)192000.0];
-    m_SAudioData->left_phase = 0;
-    m_SAudioData->right_phase = 0;
-    m_SAudioData->framesToGo = 0;
-}
-
 QList<AudioDevice>* AudioDeviceBase::get_AudioDeviceList()
 {
     return &m_audioDevice;
@@ -334,9 +328,8 @@ void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
         if(bIsStreamActive)
            StopStream();
         Pa_CloseStream(m_paStream);
-
         m_dblSampleRates = STANDARD_SAMPLERATE[nSamplingRate];
-        //AdjustDataTable();
+
         OpenStream();
         if(bIsStreamActive)
             StartStream();

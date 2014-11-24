@@ -129,8 +129,8 @@ void Synthesizer::process(const void *inputBuffer, void *outputBuffer, const uns
             }
 
             //Hardcoded for stereo 2 channel
-            *out++ = fOutSample;
-            *out++ = fOutSample;
+            *out++ += fOutSample;
+            *out++ += fOutSample;
             m_fReadIndex += m_fIncreament;
             if(m_fReadIndex > WAVETABLE_SAMPLE_RATE)m_fReadIndex = m_fReadIndex - WAVETABLE_SAMPLE_RATE;
         }
