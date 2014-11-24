@@ -12,19 +12,21 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = AudioIOTester
 TEMPLATE = app
 
+CONFIG += c++11
+
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     audiodevicebase.cpp \
-    observer.cpp \
     audiopreferencedialog.cpp \
-    synthesizer.cpp
+    synthesizer.cpp \
+    testmodule.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
-    observer.h \
     audiopreferencedialog.h \
-    synthesizer.h
+    synthesizer.h \
+    testmodule.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui

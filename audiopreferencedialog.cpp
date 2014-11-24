@@ -25,15 +25,6 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
 AudioPreferenceDialog::~AudioPreferenceDialog()
 {
     delete ui;
-    if(m_AudioDeviceBase)
-        m_AudioDeviceBase->Detach(this);
-}
-
-void AudioPreferenceDialog::Update(Subject* theChangedSubject)
-{
-    if(theChangedSubject == m_AudioDeviceBase){
-        //do something
-    }
 }
 
 void AudioPreferenceDialog::RetriveInformation()

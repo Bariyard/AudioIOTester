@@ -76,6 +76,8 @@ void AudioDeviceBase::OpenStream()
 
 }
 
+#include "math.h"
+
 int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffer,
                     unsigned long framesPerBuffer,
                     const PaStreamCallbackTimeInfo* timeInfo,
@@ -88,15 +90,28 @@ int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffe
     (void) statusFlags;
     (void) inputBuffer;
 
-    for( i=0; i<framesPerBuffer; i++ )
-    {
-        *out++ = m_SAudioData->data[m_SAudioData->left_phase]; /* left */
-        *out++ = m_SAudioData->data[m_SAudioData->right_phase]; /* right */
-        m_SAudioData->left_phase += 1;
-        if( m_SAudioData->left_phase >= m_dblSampleRates ) m_SAudioData->left_phase -= m_dblSampleRates;
-        m_SAudioData->right_phase += 1; /* higher pitch so we can distinguish left and right. */
-        if( m_SAudioData->right_phase >= m_dblSampleRates ) m_SAudioData->right_phase -= m_dblSampleRates;
+//    for( i=0; i<framesPerBuffer; i++ )
+//    {
+//        //clear buffer
+//        out[i] = 0;
+//    }
+
+    if(!m_TestModule.isEmpty()){
+        foreach( TestModule *mod, m_TestModule ){
+            mod->process(inputBuffer,outputBuffer,framesPerBuffer);
+        }
     }
+
+
+//    for( i=0; i<framesPerBuffer; i++ )
+//    {
+//        //*out++ = m_SAudioData->data[m_SAudioData->left_phase]; /* left */
+//        //*out++ = m_SAudioData->data[m_SAudioData->right_phase]; /* right */
+//        //m_SAudioData->left_phase += 1;
+//        //if( m_SAudioData->left_phase >= m_dblSampleRates ) m_SAudioData->left_phase -= m_dblSampleRates;
+//        //m_SAudioData->right_phase += 1; /* higher pitch so we can distinguish left and right. */
+//        //if( m_SAudioData->right_phase >= m_dblSampleRates ) m_SAudioData->right_phase -= m_dblSampleRates;
+//    }
     qDebug() << framesPerBuffer;
 
     return paContinue;
@@ -389,4 +404,9 @@ void AudioDeviceBase::ShowDeviceInfo(const PaStreamParameters paStream)
     qDebug() << "Default Low Input Latency:\t"   << deviceInfo->defaultLowInputLatency;
     qDebug() << "Default Low Output Latency:\t"  << deviceInfo->defaultLowOutputLatency;
 
+}
+
+void AudioDeviceBase::registerTestModule(TestModule *mod)
+{
+    m_TestModule.push_back(mod);
 }

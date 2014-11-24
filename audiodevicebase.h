@@ -2,9 +2,12 @@
 #define AUDIODEVICEBASE_H
 
 #include "portaudio.h"
-#include "observer.h"
 #include <QString>
 #include <QDebug>
+#include <QObject>
+#include <QList>
+
+#include "testmodule.h"
 
 
 struct AudioDevice{
@@ -24,11 +27,12 @@ typedef struct
 AudioData;
 
 
-class AudioDeviceBase : public Subject
+class AudioDeviceBase : public QObject
 {
+    Q_OBJECT
 public:
     AudioDeviceBase();
-    ~AudioDeviceBase();
+    virtual ~AudioDeviceBase();
 
 
     void StartStream();
@@ -54,6 +58,10 @@ public:
     //void put_AudioFrequency(double dblFrequency);
 
     void put_DataTable(const AudioData *audioData);
+
+
+    void registerTestModule(TestModule *mod);
+
 
 
 private:
@@ -105,7 +113,7 @@ private:
     void SetData();
 
     AudioData           *m_SAudioData;
-
+    QList<TestModule*>   m_TestModule;
 };
 
 #endif // AUDIODEVICEBASE_H

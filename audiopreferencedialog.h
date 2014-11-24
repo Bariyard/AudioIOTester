@@ -10,9 +10,7 @@ namespace Ui {
 class AudioPreferenceDialog;
 }
 
-class AudioPreferenceDialog :
-        public QDialog,
-        public Observer
+class AudioPreferenceDialog : public QDialog
 {
     Q_OBJECT
 
@@ -20,8 +18,8 @@ public:
     AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL, Synthesizer *synth = NULL);
     virtual ~AudioPreferenceDialog();
 
-    virtual void Update(Subject * theChangedSubject);
-        //Overide observer operation
+//    virtual void Update(Subject * theChangedSubject);
+//        //Overide observer operation
 
 public slots:
     void StartAudioTest(bool bStartTest);
