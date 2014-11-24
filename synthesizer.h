@@ -20,10 +20,12 @@ public:
     Synthesizer(AudioDeviceBase* s);
     ~Synthesizer();
 
-    void put_AudioFrequency(double dblFrequency);
-    virtual void process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer);
+    virtual void        process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer);
 
-    virtual bool isEnabled();
+    virtual bool        isEnabled();
+    void                put_AudioFrequency(double dblFrequency);
+    int                 get_WaveformType();
+    void                put_WaveformType(int nType);
 private:
     AudioDeviceBase     *m_AudioDeviceBase;
     double              m_dblAudioFrequency;

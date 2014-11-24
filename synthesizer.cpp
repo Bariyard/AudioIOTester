@@ -95,45 +95,59 @@ void Synthesizer::process(const void *inputBuffer, void *outputBuffer, const uns
         return result;
     };
 
-    float *out = (float*)outputBuffer;
-    float *in  = (float*)inputBuffer;
+    if(m_bIsModuleEnable)
+    {
+        float *out = (float*)outputBuffer;
+        float *in  = (float*)inputBuffer;
 
-    for (unsigned int i = 0; i < framesPerBuffer; i++) {
-        float fOutSample = 0.0;
-        int nReadIndex = (int)m_fReadIndex;
-        float fFrac = m_fReadIndex - nReadIndex;   //fractional part
-        int nReadIndexNext = nReadIndex + 1 >1023 ? 0 : nReadIndex +1;
+        for (unsigned int i = 0; i < framesPerBuffer; i++) {
+            float fOutSample = 0.0;
+            int nReadIndex = (int)m_fReadIndex;
+            float fFrac = m_fReadIndex - nReadIndex;   //fractional part
+            int nReadIndexNext = nReadIndex + 1 >1023 ? 0 : nReadIndex +1;
 
-        switch (m_eOscType) {
-        case Sinusoid:
-            fOutSample = (float)linear_interpolation(0, 1, m_SinArray[nReadIndex],
-                                                     m_SinArray[nReadIndexNext], fFrac);
-            break;
-        case Sawtooth:
-            fOutSample = (float)linear_interpolation(0, 1, m_SawToothArray[nReadIndex],
-                                                     m_SawToothArray[nReadIndexNext], fFrac);
-            break;
-        case Triangle:
-            fOutSample = (float)linear_interpolation(0, 1, m_TriangleArray[nReadIndex],
-                                                     m_TriangleArray[nReadIndexNext], fFrac);
-            break;
-        case Square:
-            fOutSample = (float)linear_interpolation(0, 1, m_SquareArray[nReadIndex],
-                                                     m_SquareArray[nReadIndexNext], fFrac);
-            break;
-        default:
-            fOutSample = 0.0;
-            break;
+            switch (m_eOscType) {
+            case Sinusoid:
+                fOutSample = (float)linear_interpolation(0, 1, m_SinArray[nReadIndex],
+                                                         m_SinArray[nReadIndexNext], fFrac);
+                break;
+            case Sawtooth:
+                fOutSample = (float)linear_interpolation(0, 1, m_SawToothArray[nReadIndex],
+                                                         m_SawToothArray[nReadIndexNext], fFrac);
+                break;
+            case Triangle:
+                fOutSample = (float)linear_interpolation(0, 1, m_TriangleArray[nReadIndex],
+                                                         m_TriangleArray[nReadIndexNext], fFrac);
+                break;
+            case Square:
+                fOutSample = (float)linear_interpolation(0, 1, m_SquareArray[nReadIndex],
+                                                         m_SquareArray[nReadIndexNext], fFrac);
+                break;
+            default:
+                fOutSample = 0.0;
+                break;
+            }
+
+            //Hardcoded for stereo 2 channel
+            *out++ = fOutSample;
+            *out++ = fOutSample;
+            m_fReadIndex += m_fIncreament;
+            if(m_fReadIndex > WAVETABLE_SAMPLE_RATE)m_fReadIndex = m_fReadIndex - WAVETABLE_SAMPLE_RATE;
         }
-
-        //Hardcoded for stereo 2 channel
-        *out++ = 0.5* fOutSample;
-        *out++ = 0.5* fOutSample;
-        m_fReadIndex += m_fIncreament;
-        if(m_fReadIndex > 1024)m_fReadIndex = m_fReadIndex - 1024;
     }
 }
 
-bool Synthesizer::isEnabled(){
+bool Synthesizer::isEnabled()
+{
     return m_bIsModuleEnable;
+}
+
+int Synthesizer::get_WaveformType()
+{
+    return m_eOscType;
+}
+
+void Synthesizer::put_WaveformType(int nType)
+{
+    m_eOscType = OscillatorType(nType);
 }

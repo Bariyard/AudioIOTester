@@ -18,9 +18,6 @@ public:
     AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL, Synthesizer *synth = NULL);
     virtual ~AudioPreferenceDialog();
 
-//    virtual void Update(Subject * theChangedSubject);
-//        //Overide observer operation
-
 public slots:
     void StartAudioTest(bool bStartTest);
     void ChangeInputDevice(int nSelectedItem);
@@ -30,8 +27,9 @@ public slots:
     void ChangeBufferSizeSlider(int nBufferSize);
 
     //Synthesizer
-    void ChangeBitResolution(int nBitResolution);
     void ChangeFrequency(int dblFrequency);
+    void ChangeBitResolution(int nBitResolution);
+    void ChangeWaveformType(int nType);
 
 private:
     Ui::AudioPreferenceDialog *ui;

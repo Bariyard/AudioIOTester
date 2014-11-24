@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>406</width>
-    <height>445</height>
+    <height>427</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -385,16 +385,16 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="BitResokutionHorizontalLayout">
+            <layout class="QHBoxLayout" name="waveformHorizontalLayout">
              <item>
-              <widget class="QLabel" name="BitResolutionLabel">
+              <widget class="QLabel" name="waveformLabel">
                <property name="text">
-                <string>Bit Resolution</string>
+                <string>Waveform</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="BitResolutionComboBox"/>
+              <widget class="QComboBox" name="waveformComboBox"/>
              </item>
             </layout>
            </item>

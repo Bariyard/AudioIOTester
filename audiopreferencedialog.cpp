@@ -12,11 +12,8 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
     setFixedSize(this->size());
     m_strWindowTitle = "Audio I/O Tester";
     setWindowTitle(m_strWindowTitle);
-    //if(s){
-        m_AudioDeviceBase = audioBase;
-        m_Synth         = synth;
-        //s->Attach(this);
-    //}
+    m_AudioDeviceBase = audioBase;
+    m_Synth         = synth;
     RetriveInformation();
     Connect();
 
@@ -74,16 +71,23 @@ void AudioPreferenceDialog::RetriveInformation()
     ui->BufferSizeApplyPushButton->setVisible(false);
 
     //Bit Resolution
-    int *bitResolution;
-    bitResolution = m_AudioDeviceBase->get_BitResolution();
-    while(*bitResolution != -1){
-        QString valueAsString = QString::number(*bitResolution);
-        valueAsString += " bit";
-        //Put to UI
-        ui->BitResolutionComboBox->addItem(valueAsString,*bitResolution);
-        bitResolution++;
-    }
+    //    int *bitResolution;
+    //    bitResolution = m_AudioDeviceBase->get_BitResolution();
+    //    while(*bitResolution != -1){
+    //        QString valueAsString = QString::number(*bitResolution);
+    //        valueAsString += " bit";
+    //        //Put to UI
+    //        ui->BitResolutionComboBox->addItem(valueAsString,*bitResolution);
+    //        bitResolution++;
+    //    }
 
+    //waveform type
+    int nWaveformType;
+    nWaveformType = m_Synth->get_WaveformType();
+    QString strWaveformType[] = {"sin", "saw", "triangle", "square"};
+    for(int i = 0; i < 4 ; i ++){
+        ui->waveformComboBox->addItem(strWaveformType[i]);
+    }
     ui->FrequencySlider->setRange((int)16.35,(int)7902.13);
 }
 
@@ -96,7 +100,8 @@ void AudioPreferenceDialog::Connect()
     connect(ui->BufferSizeSlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeBufferSizeSlider(int)));
     connect(ui->BufferSizeApplyPushButton,SIGNAL(clicked(bool)),this,SLOT(ChangeBufferSize()));
 
-    connect(ui->BitResolutionComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBitResolution(int)));
+    //connect(ui->BitResolutionComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBitResolution(int)));
+    connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeWaveformType(int)));
     connect(ui->FrequencySlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeFrequency(int)));
 
     connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
@@ -156,12 +161,6 @@ void AudioPreferenceDialog::ChangeBufferSize()
 }
 
 //Synthesizer
-void AudioPreferenceDialog::ChangeBitResolution(int nBitRes)
-{
-    qDebug() << "ChangeBitResolution: " << nBitRes;
-    m_AudioDeviceBase->put_BitResoulution(nBitRes);
-
-}
 
 void AudioPreferenceDialog::ChangeFrequency(int nFreq)
 {
@@ -171,3 +170,14 @@ void AudioPreferenceDialog::ChangeFrequency(int nFreq)
     ui->FrequencyValueLabel->setText(QString::number(nFreq));
 }
 
+void AudioPreferenceDialog::ChangeWaveformType(int nType){
+    qDebug() << "Change Frequency Type" << nType;
+    m_Synth->put_WaveformType(nType + 1);   //hard coded for array index value
+}
+
+void AudioPreferenceDialog::ChangeBitResolution(int nBitRes)
+{
+    qDebug() << "ChangeBitResolution: " << nBitRes;
+    m_AudioDeviceBase->put_BitResoulution(nBitRes);
+
+}
