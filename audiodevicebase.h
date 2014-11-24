@@ -34,7 +34,6 @@ public:
     AudioDeviceBase();
     virtual ~AudioDeviceBase();
 
-
     void StartStream();
     void StopStream();
 
@@ -48,21 +47,13 @@ public:
     int get_SamplingRate();
 
 
-    //data table
-    //void AdjustDataTable();
     void put_InputDevice(int nDevice, bool bIsStreamActive = false);
     void put_OutputDevice(int nDevice, bool bIsStreamActive = false);
     void put_SamplingRate(int nSamplingRate, bool bIsStreamActive = false);
     void put_BufferSize(int nBufferSize, bool bIsStreamActive = false);
     void put_BitResoulution(int nBitResolution);
-    //void put_AudioFrequency(double dblFrequency);
-
-    void put_DataTable(const AudioData *audioData);
-
 
     void registerTestModule(TestModule *mod);
-
-
 
 private:
     //Callback
@@ -108,7 +99,6 @@ private:
     PaSampleFormat      m_paDefaultSampleFormat;
     double              m_dblSampleRates;
     unsigned int        m_nBufferSize;
-    //int                 m_nDefaultBitRate;
 
     void SetData();
 

@@ -25,8 +25,6 @@ AudioDeviceBase::AudioDeviceBase():
     m_paDefaultSampleFormat(paFloat32),
     m_dblSampleRates(44100.0),
     m_nBufferSize(2048)
-    //m_nDefaultBitRate(541696) //541696
-
 {
     Initialize();
 }
@@ -127,8 +125,6 @@ int AudioDeviceBase::paCallback( const void *inputBuffer, void *outputBuffer,
     timeInfo,
     statusFlags);
 }
-
-
 
 void AudioDeviceBase::StartStream()
 {
@@ -234,14 +230,6 @@ void AudioDeviceBase::SetData()
     m_SAudioData->left_phase = 0;
     m_SAudioData->right_phase = 0;
     m_SAudioData->framesToGo = 0;
-}
-
-void AudioDeviceBase::put_DataTable(const AudioData *audioData)
-{
-    for(int i=0; i<m_dblSampleRates; i++ )
-    {
-        m_SAudioData->data[i] = audioData->data[i];
-    }
 }
 
 QList<AudioDevice>* AudioDeviceBase::get_AudioDeviceList()
