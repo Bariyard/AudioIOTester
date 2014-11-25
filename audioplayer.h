@@ -19,9 +19,13 @@ public:
 
     virtual void        process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer);
 
+    virtual void        eneble();
+    virtual void        disable();
     virtual bool        isEnabled();
 
     void readAudioFile(char *filename);
+    const float* get_AudioData();
+    unsigned long get_NumberOfSample();
 
 private:
     AudioDeviceBase     *m_AudioDeviceBase;

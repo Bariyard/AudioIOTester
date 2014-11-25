@@ -1,13 +1,18 @@
 #include "audioplayer.h"
 #include "sndfile.h"
 
+#include "waveform.h"
+
 AudioPlayer::AudioPlayer(AudioDeviceBase* s)
 {
     m_AudioDeviceBase = s;
-    m_bIsModuleEnable = true;
+    m_bIsModuleEnable = false;
 
     QString filepath = "/Users/wrbally/Downloads/LOSS.mp3";//"/Users/wrbally/Downloads/Revolution (Acapella).wav""/Users/wrbally/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav/Drum_Loop_140bpm_004_PL.wav"
-    readAudioFile((char*)"/Users/wrbally/Music/iTunes/iTunes Media/Music/Bariyard/Unknown Album/The Revolution.aif");
+
+    ///Users/bariyard/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav "/Users/bariyard/Documents/Sound Bank/voice/acclivity__i-am-female 3.wav"
+    //
+    readAudioFile((char*)"/Users/bariyard/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav/Drum_Loop_140bpm_007_PL.wav");
     m_AudioDeviceBase->registerTestModule(this);
 }
 
@@ -22,7 +27,7 @@ void AudioPlayer::process(const void *inputBuffer, void *outputBuffer, const uns
     if(m_bEndOfFile)
         qDebug() << "EOF" ;
 
-    if(m_bIsModuleEnable )
+    if(m_bIsModuleEnable)
     {
             float *out = (float*)outputBuffer;
             float *in  = (float*)inputBuffer;
@@ -41,9 +46,21 @@ void AudioPlayer::process(const void *inputBuffer, void *outputBuffer, const uns
     }
 }
 
+void AudioPlayer::eneble()
+{
+    qDebug() << "Audio Player is Enable";
+    m_bIsModuleEnable = true;
+}
+
+void AudioPlayer::disable()
+{
+    qDebug() << "Audio Player is Disable";
+    m_bIsModuleEnable = false;
+}
+
 bool AudioPlayer::isEnabled()
 {
-
+    return m_bIsModuleEnable;
 }
 
 void AudioPlayer::readAudioFile(char* filename)
@@ -70,3 +87,12 @@ void AudioPlayer::readAudioFile(char* filename)
 }
 
 
+const float* AudioPlayer::get_AudioData()
+{
+    return m_dblStartFrame;
+}
+
+unsigned long AudioPlayer::get_NumberOfSample()
+{
+    return m_nNumFrame;
+}

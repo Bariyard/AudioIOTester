@@ -2,18 +2,26 @@
 #include "ui_audiopreferencedialog.h"
 
 
-AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* audioBase, Synthesizer *synth) :
+AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* audioBase) :
     QDialog(parent),
     ui(new Ui::AudioPreferenceDialog),
-    m_AudioDeviceBase(NULL),
+    m_AudioDeviceBase(audioBase),
     m_bIsTesting(false)
 {
     ui->setupUi(this);
     setFixedSize(this->size());
     m_strWindowTitle = "Audio I/O Tester";
     setWindowTitle(m_strWindowTitle);
-    m_AudioDeviceBase = audioBase;
-    m_Synth         = synth;
+
+
+
+    m_Synth          = new Synthesizer(m_AudioDeviceBase);
+    m_AudioPlayer    = new AudioPlayer(m_AudioDeviceBase);
+    m_Waveform       = new Waveform();
+    m_Waveform->put_AudioData(m_AudioPlayer->get_AudioData());
+    m_Waveform->put_NumFrame(m_AudioPlayer->get_NumberOfSample());
+    m_Waveform->analyzeAudioData();
+
     RetriveInformation();
     Connect();
 
@@ -89,6 +97,13 @@ void AudioPreferenceDialog::RetriveInformation()
         ui->waveformComboBox->addItem(strWaveformType[i]);
     }
     ui->FrequencySlider->setRange((int)16.35,(int)7902.13);
+    //enable oscillator first
+    m_Synth->eneble();
+
+
+    //audio player tab
+    ui->AudioPlayerVerticalLayout->addWidget(m_Waveform);
+    m_Waveform->show();
 }
 
 
@@ -101,6 +116,7 @@ void AudioPreferenceDialog::Connect()
     connect(ui->BufferSizeApplyPushButton,SIGNAL(clicked(bool)),this,SLOT(ChangeBufferSize()));
 
     //connect(ui->BitResolutionComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBitResolution(int)));
+    connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(ChangeTestModule(int)));
     connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeWaveformType(int)));
     connect(ui->FrequencySlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeFrequency(int)));
 
@@ -159,6 +175,30 @@ void AudioPreferenceDialog::ChangeBufferSize()
     ui->BufferSizeApplyPushButton->setVisible(false);
     m_AudioDeviceBase->put_BufferSize(nBufferSize,m_bIsTesting);
 }
+
+
+void AudioPreferenceDialog::ChangeTestModule(int currentTab)
+{
+    qDebug() << "Set tab: " << currentTab;
+    if(m_bIsTesting)
+         m_AudioDeviceBase->StopStream();
+    m_bIsTesting = !m_bIsTesting;
+
+    switch (currentTab) {
+    case 0:{
+        m_Synth->eneble();
+        m_AudioPlayer->disable();
+        break;}
+    case 1:{
+        m_Synth->disable();
+        m_AudioPlayer->eneble();
+        break;}
+    default:
+        break;
+    }
+
+}
+
 
 //Synthesizer
 

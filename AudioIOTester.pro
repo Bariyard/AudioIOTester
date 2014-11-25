@@ -21,14 +21,16 @@ SOURCES += main.cpp\
     audiopreferencedialog.cpp \
     synthesizer.cpp \
     testmodule.cpp \
-    audioplayer.cpp
+    audioplayer.cpp \
+    waveform.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
     audiopreferencedialog.h \
     synthesizer.h \
     testmodule.h \
-    audioplayer.h
+    audioplayer.h \
+    waveform.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui

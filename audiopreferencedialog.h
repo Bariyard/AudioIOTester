@@ -3,6 +3,8 @@
 
 #include "audiodevicebase.h"
 #include "synthesizer.h"
+#include "audioplayer.h"
+#include "waveform.h"
 #include <QDialog>
 #include <QPointer>
 
@@ -15,7 +17,7 @@ class AudioPreferenceDialog : public QDialog
     Q_OBJECT
 
 public:
-    AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL, Synthesizer *synth = NULL);
+    AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL);
     virtual ~AudioPreferenceDialog();
 
 public slots:
@@ -26,6 +28,7 @@ public slots:
     void ChangeBufferSize();
     void ChangeBufferSizeSlider(int nBufferSize);
 
+    void ChangeTestModule(int currentTab);
     //Synthesizer
     void ChangeFrequency(int dblFrequency);
     void ChangeBitResolution(int nBitResolution);
@@ -36,6 +39,8 @@ private:
     QString             m_strWindowTitle;
     AudioDeviceBase     *m_AudioDeviceBase;
     Synthesizer         *m_Synth;
+    AudioPlayer         *m_AudioPlayer;
+    Waveform            *m_Waveform;
 
     bool                m_bIsTesting;
 

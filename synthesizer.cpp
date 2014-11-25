@@ -10,7 +10,7 @@ Synthesizer::Synthesizer(AudioDeviceBase* s):
     m_dblDefaultAudioFrequency(220.00)
 {
     m_AudioDeviceBase = s;
-    m_bIsModuleEnable = true;
+    m_bIsModuleEnable = false;
     m_dblAudioFrequency = m_dblDefaultAudioFrequency;
 
     //-------------wavetable oscillator----------------------
@@ -135,6 +135,16 @@ void Synthesizer::process(const void *inputBuffer, void *outputBuffer, const uns
             if(m_fReadIndex > WAVETABLE_SAMPLE_RATE)m_fReadIndex = m_fReadIndex - WAVETABLE_SAMPLE_RATE;
         }
     }
+}
+
+void Synthesizer::eneble()
+{
+    m_bIsModuleEnable = true;
+}
+
+void Synthesizer::disable()
+{
+    m_bIsModuleEnable = false;
 }
 
 bool Synthesizer::isEnabled()

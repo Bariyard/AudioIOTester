@@ -4,10 +4,9 @@
 #include "audiodevicebase.h"
 #include "audiopreferencedialog.h"
 
-#include "testmodule.h"
-#include "synthesizer.h"
-#include "audioplayer.h"
 
+
+#include "waveform.h"
 #include <QList>
 
 int main(int argc, char *argv[])
@@ -19,9 +18,10 @@ int main(int argc, char *argv[])
 
 
     AudioDeviceBase *audioDeviceBase = new AudioDeviceBase();
-    Synthesizer *synthesizer = new Synthesizer(audioDeviceBase);
-    AudioPlayer *audioPlayer   = new AudioPlayer(audioDeviceBase);
-    AudioPreferenceDialog *audioPrefDialog = new AudioPreferenceDialog(0,audioDeviceBase,synthesizer);
+    AudioPreferenceDialog *audioPrefDialog = new AudioPreferenceDialog(0,audioDeviceBase);
     audioPrefDialog->show();
+
+
+
     return a.exec();
 }

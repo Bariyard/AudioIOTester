@@ -22,6 +22,8 @@ public:
 
     virtual void        process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer);
 
+    virtual void        eneble();
+    virtual void        disable();
     virtual bool        isEnabled();
     void                put_AudioFrequency(double dblFrequency);
     int                 get_WaveformType();

@@ -283,7 +283,7 @@
          </sizepolicy>
         </property>
         <attribute name="title">
-         <string>SineWave</string>
+         <string>Oscillator</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
          <property name="leftMargin">
@@ -402,6 +402,16 @@
          </item>
         </layout>
         <zorder></zorder>
+       </widget>
+       <widget class="QWidget" name="AudioPlayerTab">
+        <attribute name="title">
+         <string>Audio File Player</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="0" column="0">
+          <layout class="QVBoxLayout" name="AudioPlayerVerticalLayout"/>
+         </item>
+        </layout>
        </widget>
       </widget>
      </item>
