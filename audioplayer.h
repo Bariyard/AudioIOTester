@@ -23,9 +23,9 @@ public:
     virtual void        disable();
     virtual bool        isEnabled();
 
-    void readAudioFile(char *filename);
     const float* get_AudioData();
     unsigned long get_NumberOfSample();
+    void set_AudioFilePath(QString path);
 
 private:
     AudioDeviceBase     *m_AudioDeviceBase;
@@ -35,8 +35,12 @@ private:
     unsigned long       m_nNumFrame;
     float               *m_dblStartFrame;
     float               *m_dblEndFrame;
-    unsigned long        m_nCurrentFrame;
+    unsigned long       m_nCurrentFrame;
     bool                m_bEndOfFile;
+
+    QString             m_AudioPath;
+    void                readAudioFile(char *filename);
+
 
 
 };

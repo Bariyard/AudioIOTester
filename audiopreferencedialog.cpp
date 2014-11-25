@@ -17,10 +17,7 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
 
     m_Synth          = new Synthesizer(m_AudioDeviceBase);
     m_AudioPlayer    = new AudioPlayer(m_AudioDeviceBase);
-    m_Waveform       = new Waveform();
-    m_Waveform->put_AudioData(m_AudioPlayer->get_AudioData());
-    m_Waveform->put_NumFrame(m_AudioPlayer->get_NumberOfSample());
-    m_Waveform->analyzeAudioData();
+    m_Waveform       = new Waveform(m_AudioPlayer);
 
     RetriveInformation();
     Connect();
@@ -103,6 +100,7 @@ void AudioPreferenceDialog::RetriveInformation()
 
     //audio player tab
     ui->AudioPlayerVerticalLayout->addWidget(m_Waveform);
+    ui->AudioPlayerTab->acceptDrops();
     m_Waveform->show();
 }
 
@@ -180,10 +178,10 @@ void AudioPreferenceDialog::ChangeBufferSize()
 void AudioPreferenceDialog::ChangeTestModule(int currentTab)
 {
     qDebug() << "Set tab: " << currentTab;
-    if(m_bIsTesting)
+    if(m_bIsTesting){
          m_AudioDeviceBase->StopStream();
-    m_bIsTesting = !m_bIsTesting;
-
+         m_bIsTesting = !m_bIsTesting;
+    }
     switch (currentTab) {
     case 0:{
         m_Synth->eneble();

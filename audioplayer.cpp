@@ -7,12 +7,15 @@ AudioPlayer::AudioPlayer(AudioDeviceBase* s)
 {
     m_AudioDeviceBase = s;
     m_bIsModuleEnable = false;
+    m_bEndOfFile = true;
 
-    QString filepath = "/Users/wrbally/Downloads/LOSS.mp3";//"/Users/wrbally/Downloads/Revolution (Acapella).wav""/Users/wrbally/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav/Drum_Loop_140bpm_004_PL.wav"
+    m_AudioPath = "";
+
+    //QString filepath = "/Users/wrbally/Downloads/LOSS.mp3";//"/Users/wrbally/Downloads/Revolution (Acapella).wav""/Users/wrbally/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav/Drum_Loop_140bpm_004_PL.wav"
 
     ///Users/bariyard/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav "/Users/bariyard/Documents/Sound Bank/voice/acclivity__i-am-female 3.wav"
     //
-    readAudioFile((char*)"/Users/bariyard/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav/Drum_Loop_140bpm_007_PL.wav");
+    //readAudioFile((char*)"/Users/bariyard/Documents/Sound Bank/Bassline 4x4 UK Garage/Drum_Loops_140bpm/Wav/Drum_Loop_140bpm_007_PL.wav");
     m_AudioDeviceBase->registerTestModule(this);
 }
 
@@ -24,9 +27,10 @@ AudioPlayer::~AudioPlayer()
 
 void AudioPlayer::process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer)
 {
-    if(m_bEndOfFile)
+    if(m_bEndOfFile){
         qDebug() << "EOF" ;
-
+        return;
+    }
     if(m_bIsModuleEnable)
     {
             float *out = (float*)outputBuffer;
@@ -95,4 +99,14 @@ const float* AudioPlayer::get_AudioData()
 unsigned long AudioPlayer::get_NumberOfSample()
 {
     return m_nNumFrame;
+}
+
+
+void AudioPlayer::set_AudioFilePath(QString path)
+{
+    m_AudioPath = path;
+
+    //if(m_dblAudioData)
+    //    delete m_dblAudioData;
+    readAudioFile(m_AudioPath.toLocal8Bit().data());
 }

@@ -2,12 +2,13 @@
 #define WAVEFORM_H
 
 #include <QWidget>
+#include "audioplayer.h"
 
 class Waveform : public QWidget
 {
     Q_OBJECT
 public:
-    Waveform(QWidget *parent = 0);
+    Waveform(AudioPlayer * audioPlayer);
     ~Waveform();
 
 
@@ -18,13 +19,22 @@ signals:
 
 protected:
     void paintEvent(QPaintEvent *event);
-    void dropEvent(QDropEvent *event);
+
+    void dragEnterEvent(QDragEnterEvent* event);
+    //this event is called when the mouse enters the widgets area during a drag/drop operation
+    void dragMoveEvent(QDragMoveEvent* event);
+    //this event is called when the mouse moves inside the widgets area during a drag/drop operation
+    void dragLeaveEvent(QDragLeaveEvent* event);
+    //this event is called when the mouse leaves the widgets area during a drag/drop operation
+    void dropEvent(QDropEvent* event);
+    //this event is called when the drop operation is initiated at the widget
+
 
 public slots:
 
 
 private:
-
+    AudioPlayer * m_AudioPlayer;
 
 
     const float *m_AudioData;

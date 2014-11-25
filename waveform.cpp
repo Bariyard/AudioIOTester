@@ -1,18 +1,28 @@
 #include "waveform.h"
-#include <QPainter>
-//#include <QListIterator>
-#include <QList>
 
-Waveform::Waveform(QWidget *parent) :
-    QWidget(parent)
+#include <QList>
+#include <QPainter>
+#include <QMimeData>
+#include <QDropEvent>
+#include <QDebug>
+#include <QDir>
+
+
+Waveform::Waveform(AudioPlayer * audioPlayer)
 {
+    m_AudioPlayer = audioPlayer;
     setBackgroundRole(QPalette::Base);
-   // analyzeAudioData();
+    setAcceptDrops(true);
+
+//    m_AudioData = m_AudioPlayer->get_AudioData();
+//    m_nFrame = m_AudioPlayer->get_NumberOfSample();
+
+//    analyzeAudioData();
 }
 
 
 Waveform::~Waveform(){
-
+    delete m_AudioData;
 }
 
 
@@ -51,8 +61,42 @@ void Waveform::paintEvent(QPaintEvent *event)
     }
 }
 
+void Waveform::dragEnterEvent(QDragEnterEvent* event)
+{
+    // if some actions should not be usable, like move, this code must be adopted
+    event->acceptProposedAction();
+}
+
+void Waveform::dragMoveEvent(QDragMoveEvent* event)
+{
+    // if some actions should not be usable, like move, this code must be adopted
+    event->acceptProposedAction();
+}
+
+
+void Waveform::dragLeaveEvent(QDragLeaveEvent* event)
+{
+    event->accept();
+}
+
+
 void Waveform::dropEvent(QDropEvent *event)
 {
+    qDebug() <<"Drop file to waveform widget" ;
+    const QMimeData* mimeData = event->mimeData();
+
+    // check for our needed mime type, here a file or a list of files
+    if (mimeData->hasUrls())
+    {
+        QString path = QString(mimeData->text());
+        path = path.section('/',2);
+        qDebug() << "Path: " << path;
+
+        m_AudioPlayer->set_AudioFilePath(path);
+        m_AudioData = m_AudioPlayer->get_AudioData();
+        m_nFrame = m_AudioPlayer->get_NumberOfSample();
+        analyzeAudioData();
+    }
 
 }
 
