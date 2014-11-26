@@ -25,7 +25,7 @@ AudioPlayer::~AudioPlayer()
 
 }
 
-void AudioPlayer::process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer)
+void AudioPlayer::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
     if(m_bEndOfFile){
         qDebug() << "EOF" ;
@@ -34,7 +34,6 @@ void AudioPlayer::process(const void *inputBuffer, void *outputBuffer, const uns
     if(m_bIsModuleEnable)
     {
             float *out = (float*)outputBuffer;
-            float *in  = (float*)inputBuffer;
 
             for (unsigned int i = 0; i < framesPerBuffer; i++) {
                 if(!m_bEndOfFile){
@@ -81,7 +80,9 @@ void AudioPlayer::readAudioFile(char* filename)
     m_dblAudioData = (float*)malloc(sf_info.frames * sf_info.channels * sizeof(float)); // TODO: is this correct?
 
     sf_count_t num_frames_read = sf_readf_float(sndfile, m_dblAudioData, sf_info.frames); // request all the frames
+    qDebug() << "Num frame read: " << num_frames_read;
     m_nNumFrame = (sf_info.frames * sf_info.channels);
+    qDebug() << "Calculate num frame: "<< m_nNumFrame;
     m_dblStartFrame = &m_dblAudioData[0];
     m_dblEndFrame = &m_dblAudioData[m_nNumFrame-1];
     m_nCurrentFrame = 0;

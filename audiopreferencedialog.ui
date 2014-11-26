@@ -401,7 +401,6 @@
           </layout>
          </item>
         </layout>
-        <zorder></zorder>
        </widget>
        <widget class="QWidget" name="AudioPlayerTab">
         <attribute name="title">

@@ -27,10 +27,8 @@ Waveform::~Waveform(){
 
 
 
-void Waveform::paintEvent(QPaintEvent *event)
+void Waveform::paintEvent(QPaintEvent */*event*/)
 {
-    float m_amplevel = 0.8;
-
     QPainter painter(this);
     painter.setPen(Qt::black);
     painter.fillRect(QRect(painter.viewport().left(),
