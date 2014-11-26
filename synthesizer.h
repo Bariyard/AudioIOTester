@@ -18,7 +18,7 @@ class Synthesizer : public TestModule
 {
 public:
     Synthesizer(AudioDeviceBase* s);
-    ~Synthesizer();
+    virtual ~Synthesizer();
 
     virtual void        process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer);
 

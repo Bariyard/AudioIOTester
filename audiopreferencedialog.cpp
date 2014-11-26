@@ -18,6 +18,8 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
     m_Synth          = new Synthesizer(m_AudioDeviceBase);
     m_AudioPlayer    = new AudioPlayer(m_AudioDeviceBase);
     m_Waveform       = new Waveform(m_AudioPlayer);
+    m_Mic            = new Microphone(m_AudioDeviceBase);
+    m_AmplitudeMonitor = new AmplitudeMonitor(m_Mic);
 
     RetriveInformation();
     Connect();
@@ -102,6 +104,12 @@ void AudioPreferenceDialog::RetriveInformation()
     ui->AudioPlayerVerticalLayout->addWidget(m_Waveform);
     ui->AudioPlayerTab->acceptDrops();
     m_Waveform->show();
+
+    //microphone tab
+    ui->MicrophoneVolumnHorizontalSlider->setRange(0,100);
+
+    ui->MicrophoneGridLayout->addWidget(m_AmplitudeMonitor);
+    m_AmplitudeMonitor->show();
 }
 
 
@@ -114,11 +122,17 @@ void AudioPreferenceDialog::Connect()
     connect(ui->BufferSizeApplyPushButton,SIGNAL(clicked(bool)),this,SLOT(ChangeBufferSize()));
 
     //connect(ui->BitResolutionComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBitResolution(int)));
+
+    //oscillator
     connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(ChangeTestModule(int)));
     connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeWaveformType(int)));
     connect(ui->FrequencySlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeFrequency(int)));
 
+    //audio player
     connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
+
+    //microphone
+    connect(ui->MicrophoneVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(ChangeMicVolumn(int)));
 }
 
 void AudioPreferenceDialog::StartAudioTest(bool bStartTest)
@@ -186,11 +200,19 @@ void AudioPreferenceDialog::ChangeTestModule(int currentTab)
     case 0:{
         m_Synth->eneble();
         m_AudioPlayer->disable();
+        m_Mic->disable();
         break;}
     case 1:{
         m_Synth->disable();
         m_AudioPlayer->eneble();
+        m_Mic->disable();
         break;}
+    case 2:{
+        m_Synth->disable();
+        m_AudioPlayer->disable();
+        m_Mic->eneble();
+        break;
+    }
     default:
         break;
     }
@@ -217,5 +239,14 @@ void AudioPreferenceDialog::ChangeBitResolution(int nBitRes)
 {
     qDebug() << "ChangeBitResolution: " << nBitRes;
     m_AudioDeviceBase->put_BitResoulution(nBitRes);
+
+}
+
+//microphone
+void AudioPreferenceDialog::ChangeMicVolumn(int volumn)
+{
+    qDebug() << "ChangeMicVolumn: " << volumn;
+    //scale from 0, 100 to 0 to 1
+    m_Mic->put_MicrophoneVolumn((float)volumn/100.0);
 
 }

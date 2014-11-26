@@ -1,13 +1,7 @@
 #include <QApplication>
 #include <QDebug>
-#include "mainwindow.h"
 #include "audiodevicebase.h"
 #include "audiopreferencedialog.h"
-
-
-
-#include "waveform.h"
-#include <QList>
 
 int main(int argc, char *argv[])
 {

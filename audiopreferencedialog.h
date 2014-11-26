@@ -5,6 +5,8 @@
 #include "synthesizer.h"
 #include "audioplayer.h"
 #include "waveform.h"
+#include "microphone.h"
+#include "amplitudemonitor.h"
 #include <QDialog>
 #include <QPointer>
 
@@ -34,13 +36,20 @@ public slots:
     void ChangeBitResolution(int nBitResolution);
     void ChangeWaveformType(int nType);
 
+    //microphone
+    void ChangeMicVolumn(int volumn);
+
 private:
     Ui::AudioPreferenceDialog *ui;
     QString             m_strWindowTitle;
     AudioDeviceBase     *m_AudioDeviceBase;
+
+    //test module
     Synthesizer         *m_Synth;
     AudioPlayer         *m_AudioPlayer;
     Waveform            *m_Waveform;
+    Microphone          *m_Mic;
+    AmplitudeMonitor    *m_AmplitudeMonitor;
 
     bool                m_bIsTesting;
 

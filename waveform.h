@@ -11,7 +11,6 @@ public:
     Waveform(AudioPlayer * audioPlayer);
     ~Waveform();
 
-
     void put_AudioData(const float *audioData);
     void put_NumFrame(unsigned long numFrame);
     void analyzeAudioData();
@@ -36,16 +35,10 @@ public slots:
 private:
     AudioPlayer * m_AudioPlayer;
 
-
     const float *m_AudioData;
     unsigned long m_nFrame;
     QList<QPointF> m_LeftAudioDataPoint;
     QList<QPointF> m_RightAudioDataPoint;
-
-    QList<QPointF> m_LeftWorldAudioDataPoint;
-    QList<QPointF> m_RightWorldAudioDataPoint;
-
-
 
 };
 

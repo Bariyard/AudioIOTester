@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     synthesizer.cpp \
     testmodule.cpp \
     audioplayer.cpp \
-    waveform.cpp
+    waveform.cpp \
+    microphone.cpp \
+    amplitudemonitor.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -30,7 +32,9 @@ HEADERS  += mainwindow.h \
     synthesizer.h \
     testmodule.h \
     audioplayer.h \
-    waveform.h
+    waveform.h \
+    microphone.h \
+    amplitudemonitor.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui

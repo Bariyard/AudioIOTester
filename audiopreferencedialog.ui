@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
-    <height>427</height>
+    <width>427</width>
+    <height>453</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -410,6 +410,38 @@
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="0" column="0">
           <layout class="QVBoxLayout" name="AudioPlayerVerticalLayout"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="MicrophoneTab">
+        <attribute name="title">
+         <string>Microphone</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="1" column="0">
+          <layout class="QGridLayout" name="MicrophoneGridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="MicrophoneVolumnLabel">
+             <property name="text">
+              <string>Mic Volumn                </string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSlider" name="MicrophoneVolumnHorizontalSlider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
