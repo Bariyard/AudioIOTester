@@ -13,8 +13,6 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
     m_strWindowTitle = "Audio I/O Tester";
     setWindowTitle(m_strWindowTitle);
 
-
-
     m_Synth          = new Synthesizer(m_AudioDeviceBase);
     m_AudioPlayer    = new AudioPlayer(m_AudioDeviceBase);
     m_Waveform       = new Waveform(m_AudioPlayer);
@@ -29,6 +27,11 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
 AudioPreferenceDialog::~AudioPreferenceDialog()
 {
     delete ui;
+    delete m_Synth;
+    delete m_AudioPlayer;
+    delete m_Waveform;
+    delete m_Mic;
+    delete m_AmplitudeMonitor;
 }
 
 void AudioPreferenceDialog::RetriveInformation()
@@ -77,17 +80,6 @@ void AudioPreferenceDialog::RetriveInformation()
     ui->BufferSizeValueLabel->setText(valueAsString);
     ui->BufferSizeApplyPushButton->setVisible(false);
 
-    //Bit Resolution
-    //    int *bitResolution;
-    //    bitResolution = m_AudioDeviceBase->get_BitResolution();
-    //    while(*bitResolution != -1){
-    //        QString valueAsString = QString::number(*bitResolution);
-    //        valueAsString += " bit";
-    //        //Put to UI
-    //        ui->BitResolutionComboBox->addItem(valueAsString,*bitResolution);
-    //        bitResolution++;
-    //    }
-
     //waveform type
     int nWaveformType;
     nWaveformType = m_Synth->get_WaveformType();
@@ -96,9 +88,9 @@ void AudioPreferenceDialog::RetriveInformation()
         ui->waveformComboBox->addItem(strWaveformType[i]);
     }
     ui->FrequencySlider->setRange((int)16.35,(int)7902.13);
+
     //enable oscillator first
     m_Synth->eneble();
-
 
     //audio player tab
     ui->AudioPlayerVerticalLayout->addWidget(m_Waveform);
@@ -219,9 +211,7 @@ void AudioPreferenceDialog::ChangeTestModule(int currentTab)
 
 }
 
-
 //Synthesizer
-
 void AudioPreferenceDialog::ChangeFrequency(int nFreq)
 {
     qDebug() << "ChangeFrequency: " << nFreq;

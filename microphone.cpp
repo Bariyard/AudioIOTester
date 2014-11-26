@@ -22,17 +22,13 @@ void Microphone::process(const void *inputBuffer, void *outputBuffer, const unsi
         float *out = (float*)outputBuffer;
         float *in  = (float*)inputBuffer;
 
-
         for (unsigned int i = 0; i < framesPerBuffer; i++) {
             *out++ += (float)m_fMicVolumn * (*in++);
             *out++ += (float)m_fMicVolumn * (*in++);
         }
 
-
         if(m_AmpMonitor)
               m_AmpMonitor->setAmpLevel(in,framesPerBuffer);
-//            m_AmpMonitor->set_Volumn(sumInputAmplitude);
-
     }
 }
 

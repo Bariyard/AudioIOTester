@@ -13,19 +13,11 @@ Waveform::Waveform(AudioPlayer * audioPlayer)
     m_AudioPlayer = audioPlayer;
     setBackgroundRole(QPalette::Base);
     setAcceptDrops(true);
-
-//    m_AudioData = m_AudioPlayer->get_AudioData();
-//    m_nFrame = m_AudioPlayer->get_NumberOfSample();
-
-//    analyzeAudioData();
 }
-
 
 Waveform::~Waveform(){
     delete m_AudioData;
 }
-
-
 
 void Waveform::paintEvent(QPaintEvent */*event*/)
 {
@@ -71,12 +63,10 @@ void Waveform::dragMoveEvent(QDragMoveEvent* event)
     event->acceptProposedAction();
 }
 
-
 void Waveform::dragLeaveEvent(QDragLeaveEvent* event)
 {
     event->accept();
 }
-
 
 void Waveform::dropEvent(QDropEvent *event)
 {
@@ -107,7 +97,6 @@ void Waveform::put_NumFrame(unsigned long numFrame)
 {
     m_nFrame = numFrame;
 }
-
 
 void Waveform::analyzeAudioData()
 {

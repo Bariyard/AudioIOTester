@@ -18,7 +18,6 @@ AmplitudeMonitor::~AmplitudeMonitor()
 
 void AmplitudeMonitor::paintEvent(QPaintEvent */*event*/)
 {
-
     QPainter painter(this);
     painter.setPen(Qt::black);
     painter.fillRect(QRect(painter.viewport().left(),
@@ -27,12 +26,10 @@ void AmplitudeMonitor::paintEvent(QPaintEvent */*event*/)
                             painter.viewport().bottom()),Qt::black);
 
     //amp
-    painter.setPen(Qt::cyan);
     painter.fillRect(QRect(painter.viewport().left(),
                             painter.viewport().top(),
                             m_amplevel*width(),
                             painter.viewport().bottom()),Qt::cyan);
-
 }
 
 void AmplitudeMonitor::setAmpLevel(float *data, int size)
