@@ -30,13 +30,13 @@ public slots:
     void ChangeBufferSize();
     void ChangeBufferSizeSlider(int nBufferSize);
 
+    //Test module
     void ChangeTestModule(int currentTab);
     //Synthesizer
     void ChangeFrequency(int dblFrequency);
-    void ChangeBitResolution(int nBitResolution);
     void ChangeWaveformType(int nType);
 
-    //microphone
+    //Microphone
     void ChangeMicVolumn(int volumn);
 
 private:

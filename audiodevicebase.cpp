@@ -2,12 +2,8 @@
 
 
 double STANDARD_SAMPLERATE[] = {
-    8000.0, 9600.0, 11025.0, 12000.0, 16000.0, 22050.0, 24000.0, 32000.0,
+//    8000.0, 9600.0, 11025.0, 12000.0, 16000.0, 22050.0, 24000.0, 32000.0,
     44100.0, 48000.0, 88200.0, 96000.0, 192000.0, -1 /* negative terminated  list */
-};
-
-int BIT_RESOLUTION[] = {
-    8, 16, 32, 64, -1 /* negative terminated  list */
 };
 
 AudioDeviceBase::AudioDeviceBase():
@@ -243,11 +239,6 @@ void AudioDeviceBase::get_AvailableBufferSize(int &minBufferSize, int &maxBuffer
     maxBufferSize = m_nMaxBufferSize;
 }
 
-int* AudioDeviceBase::get_BitResolution()
-{
-    return BIT_RESOLUTION;
-}
-
 void AudioDeviceBase::get_DefaultBufferSize(int &bufferSize)
 {
     bufferSize = m_nBufferSize;
@@ -350,18 +341,6 @@ void AudioDeviceBase::put_BufferSize(int nBufferSize, bool bIsStreamActive)
     if(bIsStreamActive)
         StartStream();
 
-}
-
-
-void AudioDeviceBase::put_BitResoulution(int nBitResolution)
-{
-#if defined(__x86_64__) || defined(_M_X64)
-    /* x86 64-bit ----------------------------------------------- */
-    qDebug() << "MacOSX 64bit";
-#elif defined(__i386) || defined(_M_IX86)
-    /* x86 32-bit ----------------------------------------------- */
-    qDebug() << "MacOSX 32bit";
-#endif
 }
 
 void AudioDeviceBase::ShowDeviceInfo(const PaStreamParameters paStream)

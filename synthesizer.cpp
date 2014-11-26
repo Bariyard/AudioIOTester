@@ -80,7 +80,7 @@ void Synthesizer::put_AudioFrequency(double dblFrequency)
 }
 
 
-void Synthesizer::process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer)
+void Synthesizer::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
     //lambda function for calculate linear interpolation
     auto linear_interpolation = [](float x1, float x2, float y1, float y2, float x)
@@ -98,7 +98,6 @@ void Synthesizer::process(const void *inputBuffer, void *outputBuffer, const uns
     if(m_bIsModuleEnable)
     {
         float *out = (float*)outputBuffer;
-        float *in  = (float*)inputBuffer;
 
         for (unsigned int i = 0; i < framesPerBuffer; i++) {
             float fOutSample = 0.0;

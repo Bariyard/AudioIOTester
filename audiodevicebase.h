@@ -31,7 +31,6 @@ public:
     QList<AudioDevice>* get_AudioDeviceList();
     double* get_AvailableSamplingRate();
     void get_AvailableBufferSize(int &minBufferSize, int &maxBufferSize);
-    int* get_BitResolution();
     void get_DefaultBufferSize(int &bufferSize);
     void get_DefaultSamplingRate(double &samplingRate);
     int get_SamplingRate();
@@ -41,7 +40,6 @@ public:
     void put_OutputDevice(int nDevice, bool bIsStreamActive = false);
     void put_SamplingRate(int nSamplingRate, bool bIsStreamActive = false);
     void put_BufferSize(int nBufferSize, bool bIsStreamActive = false);
-    void put_BitResoulution(int nBitResolution);
 
     void registerTestModule(TestModule *mod);
 

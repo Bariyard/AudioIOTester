@@ -235,13 +235,6 @@ void AudioPreferenceDialog::ChangeWaveformType(int nType){
     m_Synth->put_WaveformType(nType + 1);   //hard coded for array index value
 }
 
-void AudioPreferenceDialog::ChangeBitResolution(int nBitRes)
-{
-    qDebug() << "ChangeBitResolution: " << nBitRes;
-    m_AudioDeviceBase->put_BitResoulution(nBitRes);
-
-}
-
 //microphone
 void AudioPreferenceDialog::ChangeMicVolumn(int volumn)
 {
