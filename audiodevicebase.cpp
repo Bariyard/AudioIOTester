@@ -6,6 +6,10 @@ double STANDARD_SAMPLERATE[] = {
     44100.0, 48000.0, 88200.0, 96000.0, 192000.0, -1 /* negative terminated  list */
 };
 
+double STANDARD_BUFFERSIZE[] = {
+    32, 64, 128, 526, 1024, 2048, -1
+};
+
 AudioDeviceBase::AudioDeviceBase():
     m_strPortaudioVersion(""),
     m_nPortaudioVersion(0),
@@ -20,7 +24,7 @@ AudioDeviceBase::AudioDeviceBase():
     m_nDefaultOutputNumberOfChanel(2),
     m_paDefaultSampleFormat(paFloat32),
     m_dblSampleRates(44100.0),
-    m_nBufferSize(2048)
+    m_nBufferSize(1024)
 {
     Initialize();
 }
@@ -81,7 +85,7 @@ int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffe
     (void) statusFlags;
     (void) inputBuffer;
 
-    //clear buffer
+    //cleean buffer
     for( i=0; i<framesPerBuffer; i++ ){
         *out++ = 0.0;
         *out++ = 0.0;
@@ -92,17 +96,6 @@ int AudioDeviceBase::paCallbackMethod(const void *inputBuffer, void *outputBuffe
             mod->process(inputBuffer,outputBuffer,framesPerBuffer);
         }
     }
-
-//    for( i=0; i<framesPerBuffer; i++ )
-//    {
-//        //*out++ = m_SAudioData->data[m_SAudioData->left_phase]; /* left */
-//        //*out++ = m_SAudioData->data[m_SAudioData->right_phase]; /* right */
-//        //m_SAudioData->left_phase += 1;
-//        //if( m_SAudioData->left_phase >= m_dblSampleRates ) m_SAudioData->left_phase -= m_dblSampleRates;
-//        //m_SAudioData->right_phase += 1; /* higher pitch so we can distinguish left and right. */
-//        //if( m_SAudioData->right_phase >= m_dblSampleRates ) m_SAudioData->right_phase -= m_dblSampleRates;
-//    }
-    //qDebug() << framesPerBuffer;
 
     return paContinue;
 }
@@ -232,26 +225,19 @@ double* AudioDeviceBase::get_AvailableSamplingRate()
     return STANDARD_SAMPLERATE;
 }
 
-
-void AudioDeviceBase::get_AvailableBufferSize(int &minBufferSize, int &maxBufferSize)
+double* AudioDeviceBase::get_AvailableBufferSize()
 {
-    minBufferSize = m_nMinBufferSize;
-    maxBufferSize = m_nMaxBufferSize;
-}
-
-void AudioDeviceBase::get_DefaultBufferSize(int &bufferSize)
-{
-    bufferSize = m_nBufferSize;
-}
-
-void AudioDeviceBase::get_DefaultSamplingRate(double &samplingRate)
-{
-    samplingRate = m_dblSampleRates;
+    return STANDARD_BUFFERSIZE;
 }
 
 int AudioDeviceBase::get_SamplingRate()
 {
    return  m_dblSampleRates;
+}
+
+int AudioDeviceBase::get_BufferSize()
+{
+    return m_nBufferSize;
 }
 
 void AudioDeviceBase::put_InputDevice(int nDevice, bool bIsStreamActive)
@@ -329,18 +315,20 @@ void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
 
 void AudioDeviceBase::put_BufferSize(int nBufferSize, bool bIsStreamActive)
 {
-    if(nBufferSize >= m_nMinBufferSize && nBufferSize <= m_nMaxBufferSize)
+    if(STANDARD_BUFFERSIZE[nBufferSize] != -1)
     {
-        m_nBufferSize = nBufferSize;
+        m_nBufferSize = STANDARD_BUFFERSIZE[nBufferSize];
+        qDebug() << "Current Buffersize: " << m_nBufferSize;
+
+        if(bIsStreamActive)
+           StopStream();
+        Pa_CloseStream(m_paStream);
+
+        OpenStream();
+        if(bIsStreamActive)
+            StartStream();
+
     }
-    if(bIsStreamActive)
-       StopStream();
-    Pa_CloseStream(m_paStream);
-
-    OpenStream();
-    if(bIsStreamActive)
-        StartStream();
-
 }
 
 void AudioDeviceBase::ShowDeviceInfo(const PaStreamParameters paStream)

@@ -27,8 +27,7 @@ public slots:
     void ChangeInputDevice(int nSelectedItem);
     void ChangeOutputDevice(int nSelectedItem);
     void ChangeSamplingRate(int nSelectedItem);
-    void ChangeBufferSize();
-    void ChangeBufferSizeSlider(int nBufferSize);
+    void ChangeBufferSize(int nBufferSize);
 
     //Test module
     void ChangeTestModule(int currentTab);

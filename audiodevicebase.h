@@ -29,11 +29,10 @@ public:
 
     //AudioDeviceBase Interface
     QList<AudioDevice>* get_AudioDeviceList();
-    double* get_AvailableSamplingRate();
-    void get_AvailableBufferSize(int &minBufferSize, int &maxBufferSize);
-    void get_DefaultBufferSize(int &bufferSize);
-    void get_DefaultSamplingRate(double &samplingRate);
-    int get_SamplingRate();
+    double*     get_AvailableSamplingRate();
+    double*     get_AvailableBufferSize();
+    int         get_SamplingRate();
+    int         get_BufferSize();
 
 
     void put_InputDevice(int nDevice, bool bIsStreamActive = false);
