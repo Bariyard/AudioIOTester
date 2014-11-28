@@ -27,9 +27,12 @@ public:
     virtual void        disable();
     virtual bool        isEnabled();
 
-    void                put_AudioFrequency(double dblFrequency);
+    void                put_Frequency(double dblFrequency);
+    float               get_Frequency();
     int                 get_WaveformType();
     void                put_WaveformType(int nType);
+
+
 private:
     AudioDeviceBase     *m_AudioDeviceBase;
     double              m_dblAudioFrequency;

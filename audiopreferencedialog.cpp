@@ -101,6 +101,7 @@ void AudioPreferenceDialog::RetriveInformation()
         ui->waveformComboBox->addItem(strWaveformType[i]);
     }
     ui->FrequencySlider->setRange((int)16.35,(int)7902.13);
+    ui->FrequencySlider->setValue((int)m_Synth->get_Frequency());
 
     //enable oscillator first
     m_Synth->eneble();
@@ -112,7 +113,7 @@ void AudioPreferenceDialog::RetriveInformation()
 
     //microphone tab
     ui->MicrophoneVolumnHorizontalSlider->setRange(0,100);
-
+    ui->MicrophoneVolumnHorizontalSlider->setValue(m_Mic->get_MicrophoneVolumn()*100);
     ui->MicrophoneGridLayout->addWidget(m_AmplitudeMonitor);
     m_AmplitudeMonitor->show();
 }
@@ -220,7 +221,7 @@ void AudioPreferenceDialog::ChangeFrequency(int nFreq)
 {
     qDebug() << "ChangeFrequency: " << nFreq;
     //m_AudioDeviceBase->put_AudioFrequency(nFreq);
-    m_Synth->put_AudioFrequency(nFreq);
+    m_Synth->put_Frequency(nFreq);
     ui->FrequencyValueLabel->setText(QString::number(nFreq));
 }
 

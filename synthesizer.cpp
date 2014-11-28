@@ -72,7 +72,12 @@ Synthesizer::~Synthesizer()
 
 }
 
-void Synthesizer::put_AudioFrequency(double dblFrequency)
+float Synthesizer::get_Frequency()
+{
+    return m_dblAudioFrequency;
+}
+
+void Synthesizer::put_Frequency(double dblFrequency)
 {
     m_dblAudioFrequency = dblFrequency;
     reset();
