@@ -300,12 +300,13 @@ void AudioDeviceBase::put_OutputDevice(int nDevice, bool bIsStreamActive)
 
 void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
 {
-    if(STANDARD_SAMPLERATE[nSamplingRate] != -1)
+    if(nSamplingRate != m_dblSampleRates)
     {
+        m_dblSampleRates = nSamplingRate;
+        qDebug() << "Current Sampling Rate: " << m_dblSampleRates;
         if(bIsStreamActive)
            StopStream();
         Pa_CloseStream(m_paStream);
-        m_dblSampleRates = STANDARD_SAMPLERATE[nSamplingRate];
 
         OpenStream();
         if(bIsStreamActive)
@@ -315,11 +316,10 @@ void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
 
 void AudioDeviceBase::put_BufferSize(int nBufferSize, bool bIsStreamActive)
 {
-    if(STANDARD_BUFFERSIZE[nBufferSize] != -1)
+    if(nBufferSize != m_nBufferSize)
     {
-        m_nBufferSize = STANDARD_BUFFERSIZE[nBufferSize];
-        qDebug() << "Current Buffersize: " << m_nBufferSize;
-
+        m_nBufferSize = nBufferSize;
+        qDebug() << "Current Buffer Size: " << m_nBufferSize;
         if(bIsStreamActive)
            StopStream();
         Pa_CloseStream(m_paStream);

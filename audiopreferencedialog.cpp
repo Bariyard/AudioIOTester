@@ -81,7 +81,7 @@ void AudioPreferenceDialog::RetriveInformation()
     {
         for(int i = 0; *bufferSizeList != -1; i++){
             QString valueAsString = QString::number(*bufferSizeList)+" Samples";
-            qDebug() << bufferSizeList << ",,,,," << *bufferSizeList;
+            qDebug() << valueAsString << ",,,,," << *bufferSizeList;
 
             //Put to UI
             ui->BufferSizeComboBox->addItem(valueAsString,*bufferSizeList);
@@ -173,13 +173,15 @@ void AudioPreferenceDialog::ChangeOutputDevice(int nSelectedItem)
 void AudioPreferenceDialog::ChangeSamplingRate(int nSelectedItem)
 {
     qDebug() << "ChangeSamplingRate: "<< nSelectedItem;
-    m_AudioDeviceBase->put_SamplingRate(nSelectedItem,m_bIsTesting);
+    m_AudioDeviceBase->put_SamplingRate(ui->SamplingRateComboBox->itemData(nSelectedItem).toInt()
+                                        ,m_bIsTesting);
 }
 
-void AudioPreferenceDialog::ChangeBufferSize(int nBufferSize)
+void AudioPreferenceDialog::ChangeBufferSize(int nSelectedItem)
 {
 //    int nBufferSize = ui->BufferSizeSlider->value();
-    m_AudioDeviceBase->put_BufferSize(nBufferSize,m_bIsTesting);
+    m_AudioDeviceBase->put_BufferSize(ui->BufferSizeComboBox->itemData(nSelectedItem).toInt(),
+                                      m_bIsTesting);
 }
 
 
