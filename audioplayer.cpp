@@ -25,6 +25,12 @@ AudioPlayer::~AudioPlayer()
 
 }
 
+void AudioPlayer::reset()
+{
+
+}
+
+
 void AudioPlayer::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
     if(m_bEndOfFile){

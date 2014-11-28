@@ -14,6 +14,7 @@ public:
     Microphone(AudioDeviceBase* s);
     virtual ~Microphone();
 
+    virtual void        reset();
     virtual void        process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer);
 
     virtual void        eneble();

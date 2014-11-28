@@ -60,6 +60,7 @@ private:
     void Initialize();
     void Terminate();
     void OpenStream();
+    void resetTestModule();
 
     //Portaudio Information
     void RetrivePortAudioInformation();

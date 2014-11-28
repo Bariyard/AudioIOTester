@@ -308,6 +308,7 @@ void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
            StopStream();
         Pa_CloseStream(m_paStream);
 
+        resetTestModule();
         OpenStream();
         if(bIsStreamActive)
             StartStream();
@@ -324,6 +325,7 @@ void AudioDeviceBase::put_BufferSize(int nBufferSize, bool bIsStreamActive)
            StopStream();
         Pa_CloseStream(m_paStream);
 
+        resetTestModule();
         OpenStream();
         if(bIsStreamActive)
             StartStream();
@@ -351,3 +353,13 @@ void AudioDeviceBase::registerTestModule(TestModule *mod)
 {
     m_TestModule.push_back(mod);
 }
+
+void AudioDeviceBase::resetTestModule()
+{
+    if(!m_TestModule.isEmpty()){
+        foreach( TestModule *mod, m_TestModule ){
+            mod->reset();
+        }
+    }
+}
+

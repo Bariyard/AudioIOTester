@@ -75,6 +75,11 @@ Synthesizer::~Synthesizer()
 void Synthesizer::put_AudioFrequency(double dblFrequency)
 {
     m_dblAudioFrequency = dblFrequency;
+    reset();
+}
+
+void Synthesizer::reset()
+{
     m_fReadIndex = 0.0;
     m_fIncreament = WAVETABLE_SAMPLE_RATE * m_dblAudioFrequency/(float)m_AudioDeviceBase->get_SamplingRate();
 }

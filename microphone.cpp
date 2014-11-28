@@ -15,6 +15,12 @@ Microphone::~Microphone()
 
 }
 
+
+void Microphone::reset()
+{
+
+}
+
 void Microphone::process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer)
 {
     if(m_bIsModuleEnable)
