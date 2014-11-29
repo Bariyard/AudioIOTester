@@ -7,6 +7,7 @@
 #include "waveform.h"
 #include "microphone.h"
 #include "amplitudemonitor.h"
+#include "globalvolumn.h"
 #include <QDialog>
 #include <QPointer>
 
@@ -42,6 +43,9 @@ public slots:
     //Microphone
     void ChangeMicVolumn(int volumn);
 
+    //global volumn
+    void ChangeGlobalVolumn(int volumn);
+
 private:
     Ui::AudioPreferenceDialog *ui;
     QString             m_strWindowTitle;
@@ -53,6 +57,7 @@ private:
     Waveform            *m_Waveform;
     Microphone          *m_Mic;
     AmplitudeMonitor    *m_AmplitudeMonitor;
+    GlobalVolumn        *m_GlobalVolumn;
 
     bool                m_bIsTesting;
 

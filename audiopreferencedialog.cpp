@@ -18,6 +18,7 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
     m_Waveform       = new Waveform(m_AudioPlayer);
     m_Mic            = new Microphone(m_AudioDeviceBase);
     m_AmplitudeMonitor = new AmplitudeMonitor(m_Mic);
+    m_GlobalVolumn   = new GlobalVolumn(m_AudioDeviceBase);
 
     RetriveInformation();
     Connect();
@@ -120,6 +121,9 @@ void AudioPreferenceDialog::RetriveInformation()
     ui->MicrophoneVolumnHorizontalSlider->setValue(m_Mic->get_MicrophoneVolumn()*100);
     ui->MicrophoneGridLayout->addWidget(m_AmplitudeMonitor);
     m_AmplitudeMonitor->show();
+
+    //global volumn
+    ui->TestVolumnHorizontalSlider->setValue(m_GlobalVolumn->get_GlobalVolumn()*100);
 }
 
 
@@ -142,6 +146,9 @@ void AudioPreferenceDialog::Connect()
 
     //microphone
     connect(ui->MicrophoneVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(ChangeMicVolumn(int)));
+
+    //global volumn
+    connect(ui->TestVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(ChangeGlobalVolumn(int)));
 }
 
 void AudioPreferenceDialog::StartAudioTest(bool bStartTest)
@@ -242,3 +249,12 @@ void AudioPreferenceDialog::ChangeMicVolumn(int volumn)
     m_Mic->put_MicrophoneVolumn((float)volumn/100.0);
 
 }
+
+//global volumn
+void AudioPreferenceDialog::ChangeGlobalVolumn(int volumn)
+{
+    qDebug() << "ChangeMicVolumn: " << volumn;
+    //scale from 0, 100 to 0 to 1
+    m_GlobalVolumn->set_GlobalVolumn((double)volumn/100.0);
+}
+

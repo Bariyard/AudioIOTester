@@ -99,18 +99,9 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="BufferSizeLayout">
-       <property name="spacing">
-        <number>0</number>
-       </property>
+      <layout class="QHBoxLayout" name="BufferSizeHorizontalLayout">
        <item>
         <widget class="QLabel" name="BufferSizeLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
          <property name="text">
           <string>Buffer Size</string>
          </property>
@@ -118,6 +109,41 @@
        </item>
        <item>
         <widget class="QComboBox" name="BufferSizeComboBox"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="TestVolumnHorizontalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="TestVolumnhorizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="TestVolumnLabel">
+           <property name="text">
+            <string>Test Volumn</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QSlider" name="TestVolumnHorizontalSlider">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -146,7 +172,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="SynthesizerTab">
         <property name="sizePolicy">
@@ -288,6 +314,9 @@
         <spacer name="BottomHorizontalSpacer_1">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
