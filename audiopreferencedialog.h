@@ -10,6 +10,9 @@
 #include <QDialog>
 #include <QPointer>
 
+#include "CustomComponent/doubleslider.h"
+
+//class DoubleSlider;
 namespace Ui {
 class AudioPreferenceDialog;
 }
@@ -21,6 +24,7 @@ class AudioPreferenceDialog : public QDialog
 public:
     AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL);
     virtual ~AudioPreferenceDialog();
+signals:
 
 public slots:
     void StartAudioTest(bool bStartTest);
@@ -32,7 +36,7 @@ public slots:
     //Test module
     void ChangeTestModule(int currentTab);
     //Synthesizer
-    void ChangeFrequency(int dblFrequency);
+    void ChangeFrequency(double dblFreq);
     void ChangeWaveformType(int nType);
 
     //Microphone
@@ -51,6 +55,8 @@ private:
     AmplitudeMonitor    *m_AmplitudeMonitor;
 
     bool                m_bIsTesting;
+
+    DoubleSlider        *m_FrequencySlider;
 
     void RetriveInformation();
     void Connect();

@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     audioplayer.cpp \
     waveform.cpp \
     microphone.cpp \
-    amplitudemonitor.cpp
+    amplitudemonitor.cpp \
+    CustomComponent/doubleslider.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     audioplayer.h \
     waveform.h \
     microphone.h \
-    amplitudemonitor.h
+    amplitudemonitor.h \
+    CustomComponent/doubleslider.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui

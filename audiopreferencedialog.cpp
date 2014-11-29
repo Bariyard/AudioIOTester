@@ -100,8 +100,12 @@ void AudioPreferenceDialog::RetriveInformation()
     for(int i = 0; i < 4 ; i ++){
         ui->waveformComboBox->addItem(strWaveformType[i]);
     }
-    ui->FrequencySlider->setRange((int)16.35,(int)7902.13);
-    ui->FrequencySlider->setValue((int)m_Synth->get_Frequency());
+    //Frequency double slider
+    m_FrequencySlider = new DoubleSlider();
+    m_FrequencySlider->setOrientation(Qt::Horizontal);
+    m_FrequencySlider->setRange(0,100);
+    m_FrequencySlider->setScale(16.35,7902.13);
+    ui->FrequencyLayout->addWidget(m_FrequencySlider);
 
     //enable oscillator first
     m_Synth->eneble();
@@ -131,7 +135,7 @@ void AudioPreferenceDialog::Connect()
     //oscillator
     connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(ChangeTestModule(int)));
     connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeWaveformType(int)));
-    connect(ui->FrequencySlider,SIGNAL(valueChanged(int)),this,SLOT(ChangeFrequency(int)));
+    connect(m_FrequencySlider, SIGNAL(doubleValueChanged(double)), this, SLOT(ChangeFrequency(double)));
 
     //audio player
     connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
@@ -217,12 +221,12 @@ void AudioPreferenceDialog::ChangeTestModule(int currentTab)
 }
 
 //Synthesizer
-void AudioPreferenceDialog::ChangeFrequency(int nFreq)
+void AudioPreferenceDialog::ChangeFrequency(double dblFreq)
 {
-    qDebug() << "ChangeFrequency: " << nFreq;
-    //m_AudioDeviceBase->put_AudioFrequency(nFreq);
-    m_Synth->put_Frequency(nFreq);
-    ui->FrequencyValueLabel->setText(QString::number(nFreq));
+    qDebug() << "ChangeFrequency: " << dblFreq;
+    m_Synth->put_Frequency(dblFreq);
+    ui->FrequencyValueLabel->setText(QString::number(dblFreq, 'f', 2));
+
 }
 
 void AudioPreferenceDialog::ChangeWaveformType(int nType){

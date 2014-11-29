@@ -83,6 +83,16 @@ void Synthesizer::put_Frequency(double dblFrequency)
     reset();
 }
 
+float Synthesizer::get_MinimumFrequency()
+{
+    return MINIMUM_FREQUENCY;
+}
+
+float Synthesizer::get_MaximumFrequency()
+{
+    return MAXIMUM_FREQUENCY;
+}
+
 void Synthesizer::reset()
 {
     m_fReadIndex = 0.0;
