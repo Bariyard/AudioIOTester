@@ -314,7 +314,7 @@ void AudioDeviceBase::put_SamplingRate(int nSamplingRate, bool bIsStreamActive)
 
 void AudioDeviceBase::put_BufferSize(int nBufferSize, bool bIsStreamActive)
 {
-    if(m_nBufferSize != nBufferSize)
+    if(m_nBufferSize != (unsigned int)nBufferSize)
     {
         m_nBufferSize = nBufferSize;
         qDebug() << "Current Buffer Size: " << m_nBufferSize;
