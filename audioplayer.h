@@ -3,18 +3,11 @@
 #include "testmodule.h"
 #include "audiodevicebase.h"
 
-typedef struct {
-        float* data_frame;
-        unsigned long num_frame;
-        float* start_frame;
-        float* end_frame;
-}Audio_file;
-
-
 class AudioPlayer : public TestModule
 {
+
 public:
-    AudioPlayer(AudioDeviceBase* s);
+    AudioPlayer(AudioDeviceBase* pAudioDeviceBase);
     virtual ~AudioPlayer();
 
     virtual void        reset();
@@ -24,24 +17,23 @@ public:
     virtual void        disable();
     virtual bool        isEnabled();
 
-    const float* get_AudioData();
-    unsigned long get_NumberOfSample();
-    void set_AudioFilePath(QString path);
+    const float*        get_AudioData();
+    unsigned long       get_NumberOfSample();
+    void                set_AudioFilePath(QString strFilePath);
 
 private:
-    AudioDeviceBase     *m_AudioDeviceBase;
+    AudioDeviceBase     *m_pAudioDeviceBase;
     bool                m_bIsModuleEnable;
 
-    float               *m_dblAudioData;
+    float               *m_pAudioData;
     unsigned long       m_nNumFrame;
-    float               *m_dblStartFrame;
-    float               *m_dblEndFrame;
+    float               *m_pStartFrame;
+    float               *m_pEndFrame;
     unsigned long       m_nCurrentFrame;
     bool                m_bEndOfFile;
 
-    QString             m_AudioPath;
-    void                readAudioFile(char *filename);
-
+    void                readAudioFile(char *pFilename);
+    QString             m_strAudioPath;
 
 
 };

@@ -1,12 +1,11 @@
 #include "globalvolumn.h"
 
-GlobalVolumn::GlobalVolumn(AudioDeviceBase* s)
+GlobalVolumn::GlobalVolumn(AudioDeviceBase* pAudioDeviceBase)
 {
-    m_AudioDeviceBase = s;
+    m_pAudioDeviceBase = pAudioDeviceBase;
     m_bIsModuleEnable = true;
     m_dblGlobalVolumn = 0.7;
-    m_AudioDeviceBase->registerTestModule(this);
-
+    m_pAudioDeviceBase->RegisterTestModule(this);
 }
 
 GlobalVolumn::~GlobalVolumn()
@@ -19,17 +18,15 @@ void GlobalVolumn::reset()
 
 }
 
-
 void GlobalVolumn::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
     if(m_bIsModuleEnable)
     {
-            float *out = (float*)outputBuffer;
-
-            for (unsigned int i = 0; i < framesPerBuffer; i++) {
-                *out++ = (*out) * m_dblGlobalVolumn;
-                *out++ = (*out) * m_dblGlobalVolumn;
-            }
+        float *out = (float*)outputBuffer;
+        for (unsigned int i = 0; i < framesPerBuffer; i++) {
+            *out = (*out) * m_dblGlobalVolumn;  out++;
+            *out = (*out) * m_dblGlobalVolumn;  out++;
+        }
     }
 }
 

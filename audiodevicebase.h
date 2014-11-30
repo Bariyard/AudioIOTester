@@ -1,20 +1,20 @@
 #ifndef AUDIODEVICEBASE_H
 #define AUDIODEVICEBASE_H
 
-#include "portaudio.h"
 #include <QString>
 #include <QDebug>
 #include <QObject>
 #include <QList>
 
+#include "portaudio.h"
 #include "testmodule.h"
 
 
 struct AudioDevice{
-    QString name;
-    int     index;
-    bool    isInputOrOutput;    //input = true, output = false
-    bool    isDefault;
+    QString strName;
+    int     nIndex;
+    bool    bIsInputOrOutput;    //input = true, output = false
+    bool    bIsDefaultDevice;
 };
 
 class AudioDeviceBase : public QObject
@@ -40,11 +40,11 @@ public:
     void put_SamplingRate(int nSamplingRate, bool bIsStreamActive = false);
     void put_BufferSize(int nBufferSize, bool bIsStreamActive = false);
 
-    void registerTestModule(TestModule *mod);
+    void RegisterTestModule(TestModule *pModule);
 
 private:
     //Callback
-    int paCallbackMethod(const void *inputBuffer, void *outputBuffer,
+    int CallbackFunction(const void *inputBuffer, void *outputBuffer,
                         unsigned long framesPerBuffer,
                         const PaStreamCallbackTimeInfo* timeInfo,
                         PaStreamCallbackFlags statusFlags);
@@ -55,12 +55,11 @@ private:
                             PaStreamCallbackFlags statusFlags,
                             void *userData );
 
-
     //Streaming function
     void Initialize();
     void Terminate();
     void OpenStream();
-    void resetTestModule();
+    void ResetTestModule();
 
     //Portaudio Information
     void RetrivePortAudioInformation();
@@ -70,7 +69,7 @@ private:
     int                 m_nPortaudioVersion;
     int                 m_nNumberOfDevices;
 
-    QList<AudioDevice>  m_audioDevice;
+    QList<AudioDevice>  m_AudioDevice;
 
     //PaStream
     PaStream*           m_paStream;
@@ -78,17 +77,14 @@ private:
     PaStreamParameters  m_paOutputParameters;
     PaError             m_paError;
 
-    int                 m_nMinBufferSize;
-    int                 m_nMaxBufferSize;
-
     //Default value
     int                 m_nDefaultInputNumberOfChanel;
     int                 m_nDefaultOutputNumberOfChanel;
     PaSampleFormat      m_paDefaultSampleFormat;
-    double              m_dblSampleRates;
+    int                 m_nSampleRate;
     unsigned int        m_nBufferSize;
 
-    QList<TestModule*>   m_TestModule;
+    QList<TestModule*>   m_pTestModule;
 };
 
 #endif // AUDIODEVICEBASE_H

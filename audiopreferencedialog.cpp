@@ -2,23 +2,23 @@
 #include "ui_audiopreferencedialog.h"
 
 
-AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* audioBase) :
+AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* pAudioDeviceBase) :
     QDialog(parent),
     ui(new Ui::AudioPreferenceDialog),
-    m_AudioDeviceBase(audioBase),
-    m_bIsTesting(false)
+    m_pAudioDeviceBase(pAudioDeviceBase)
 {
     ui->setupUi(this);
     setFixedSize(this->size());
-    m_strWindowTitle = "Audio I/O Tester";
+    m_strWindowTitle    = "Audio I/O Tester";
     setWindowTitle(m_strWindowTitle);
 
-    m_Synth          = new Synthesizer(m_AudioDeviceBase);
-    m_AudioPlayer    = new AudioPlayer(m_AudioDeviceBase);
-    m_Waveform       = new Waveform(m_AudioPlayer);
-    m_Mic            = new Microphone(m_AudioDeviceBase);
-    m_AmplitudeMonitor = new AmplitudeMonitor(m_Mic);
-    m_GlobalVolumn   = new GlobalVolumn(m_AudioDeviceBase);
+    m_bIsTesting        = false;
+    m_pSynth            = new Synthesizer(m_pAudioDeviceBase);
+    m_pAudioPlayer      = new AudioPlayer(m_pAudioDeviceBase);
+    m_pWaveform         = new Waveform(m_pAudioPlayer);
+    m_pMic              = new Microphone(m_pAudioDeviceBase);
+    m_pAmplitudeMonitor = new AmplitudeMonitor(m_pMic);
+    m_pGlobalVolumn     = new GlobalVolumn(m_pAudioDeviceBase);
 
     RetriveInformation();
     Connect();
@@ -28,233 +28,237 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* au
 AudioPreferenceDialog::~AudioPreferenceDialog()
 {
     delete ui;
-    delete m_Synth;
-    delete m_AudioPlayer;
-    delete m_Waveform;
-    delete m_Mic;
-    delete m_AmplitudeMonitor;
+    delete m_pSynth;
+    delete m_pAudioPlayer;
+    delete m_pWaveform;
+    delete m_pMic;
+    delete m_pAmplitudeMonitor;
 }
 
 void AudioPreferenceDialog::RetriveInformation()
 {
     //Set Audio Device List
-    QList<AudioDevice> *device;
-    device = m_AudioDeviceBase->get_AudioDeviceList();
-    for (int i = 0; i < device->size(); ++i)
+    QList<AudioDevice> *pDevice;
+    pDevice = m_pAudioDeviceBase->get_AudioDeviceList();
+    for (int i = 0; i < pDevice->size(); ++i)
     {
-        if (device->at(i).isInputOrOutput) //true means input
+        if (pDevice->at(i).bIsInputOrOutput) //true means input
         {
-            ui->AudioInputComboBox->addItem(device->at(i).name, device->at(i).index);
+            ui->AudioInputComboBox->addItem(pDevice->at(i).strName, pDevice->at(i).nIndex);
         }
         else
         {
-            ui->AudioOutputComboBox->addItem(device->at(i).name, device->at(i).index);
+            ui->AudioOutputComboBox->addItem(pDevice->at(i).strName, pDevice->at(i).nIndex);
         }
     }
 
-    //Sampling Rate
-    double *samplingRate;
-    samplingRate = m_AudioDeviceBase->get_AvailableSamplingRate();
-    qDebug() << &samplingRate <<"  "<<*samplingRate;
-    if(samplingRate)
+    //Sampling Rate List
+    double *pSamplingRateList;
+    pSamplingRateList = m_pAudioDeviceBase->get_AvailableSamplingRate();
+    qDebug() << &pSamplingRateList << "  " <<*pSamplingRateList;
+    if(pSamplingRateList)
     {
-        for(int i = 0; *samplingRate != -1; i++){
-            QString valueAsString = QString::number(*samplingRate);
-            qDebug() << valueAsString << ",,,,," << *samplingRate;
+        for(int i = 0; *pSamplingRateList != -1; i++)
+        {
+            QString valueAsString = QString::number(*pSamplingRateList);
+            qDebug() << valueAsString << "," << *pSamplingRateList;
 
             //Put to UI
-            ui->SamplingRateComboBox->addItem(valueAsString,*samplingRate);
-            if(*samplingRate == m_AudioDeviceBase->get_SamplingRate())
+            ui->SamplingRateComboBox->addItem(valueAsString,*pSamplingRateList);
+            if(*pSamplingRateList == m_pAudioDeviceBase->get_SamplingRate())
             {
                 ui->SamplingRateComboBox->setCurrentIndex(i);
             }
-            samplingRate++;
+            pSamplingRateList++;
         }
-
-
     }
 
-    //Buffer Size
-    double *bufferSizeList;
-    bufferSizeList = m_AudioDeviceBase->get_AvailableBufferSize();
-    qDebug() << &bufferSizeList <<"  "<<*bufferSizeList;
-    if(bufferSizeList)
+    //Buffer Size List
+    double *pBufferSizeList;
+    pBufferSizeList = m_pAudioDeviceBase->get_AvailableBufferSize();
+    qDebug() << &pBufferSizeList << " " << *pBufferSizeList;
+    if(pBufferSizeList)
     {
-        for(int i = 0; *bufferSizeList != -1; i++){
-            QString valueAsString = QString::number(*bufferSizeList)+" Samples";
-            qDebug() << valueAsString << ",,,,," << *bufferSizeList;
+        for(int i = 0; *pBufferSizeList != -1; i++)
+        {
+            QString valueAsString = QString::number(*pBufferSizeList)+" Samples";
+            qDebug() << valueAsString << ", " << *pBufferSizeList;
 
             //Put to UI
-            ui->BufferSizeComboBox->addItem(valueAsString,*bufferSizeList);
-            if(*bufferSizeList == m_AudioDeviceBase->get_BufferSize())
+            ui->BufferSizeComboBox->addItem(valueAsString,*pBufferSizeList);
+            if(*pBufferSizeList == m_pAudioDeviceBase->get_BufferSize())
             {
                 ui->BufferSizeComboBox->setCurrentIndex(i);
             }
-            bufferSizeList++;
+            pBufferSizeList++;
         }
     }
 
     //waveform type
     int nWaveformType;
-    nWaveformType = m_Synth->get_WaveformType();
-    QString strWaveformType[] = {"sin", "saw", "triangle", "square"};
-    for(int i = 0; i < 4 ; i ++){
+    nWaveformType = m_pSynth->get_WaveformType();
+    QString *strWaveformType = m_pSynth->get_WaveformTypeString();
+    for(int i = 0; i < 4 ; i ++)
+    {
         ui->waveformComboBox->addItem(strWaveformType[i]);
     }
-    //Frequency double slider
-    m_FrequencySlider = new DoubleSlider();
-    m_FrequencySlider->setOrientation(Qt::Horizontal);
-    m_FrequencySlider->setRange(0,100);
-    m_FrequencySlider->setScale(16.35,7902.13);
-    ui->FrequencyLayout->addWidget(m_FrequencySlider);
 
+    //Frequency double slider
+    m_pFrequencySlider = new DoubleSlider();
+    m_pFrequencySlider->setOrientation(Qt::Horizontal);
+    m_pFrequencySlider->setRange(0,100);
+    m_pFrequencySlider->setScale(16.35,7902.13);
+    ui->FrequencyLayout->addWidget(m_pFrequencySlider);
     //enable oscillator first
-    m_Synth->eneble();
+    m_pSynth->eneble();
 
     //audio player tab
-    ui->AudioPlayerVerticalLayout->addWidget(m_Waveform);
+    ui->AudioPlayerVerticalLayout->addWidget(m_pWaveform);
     ui->AudioPlayerTab->acceptDrops();
-    m_Waveform->show();
+    m_pWaveform->show();
 
     //microphone tab
     ui->MicrophoneVolumnHorizontalSlider->setRange(0,100);
-    ui->MicrophoneVolumnHorizontalSlider->setValue(m_Mic->get_MicrophoneVolumn()*100);
-    ui->MicrophoneGridLayout->addWidget(m_AmplitudeMonitor);
-    m_AmplitudeMonitor->show();
+    ui->MicrophoneVolumnHorizontalSlider->setValue(m_pMic->get_MicrophoneVolumn()*100);
+    ui->MicrophoneGridLayout->addWidget(m_pAmplitudeMonitor);
+    m_pAmplitudeMonitor->show();
 
     //global volumn
-    ui->TestVolumnHorizontalSlider->setValue(m_GlobalVolumn->get_GlobalVolumn()*100);
+    ui->TestVolumnHorizontalSlider->setValue(m_pGlobalVolumn->get_GlobalVolumn()*100);
 }
-
 
 void AudioPreferenceDialog::Connect()
 {
-    connect(ui->AudioInputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeInputDevice(int)));
-    connect(ui->AudioOutputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeOutputDevice(int)));
-    connect(ui->SamplingRateComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeSamplingRate(int)));
-    connect(ui->BufferSizeComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBufferSize(int)));
-
-    //connect(ui->BitResolutionComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(ChangeBitResolution(int)));
-
+    connect(ui->AudioInputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateInputDevice(int)));
+    connect(ui->AudioOutputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateOutputDevice(int)));
+    connect(ui->SamplingRateComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateSamplingRate(int)));
+    connect(ui->BufferSizeComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateBufferSize(int)));
     //oscillator
-    connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(ChangeTestModule(int)));
-    connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangeWaveformType(int)));
-    connect(m_FrequencySlider, SIGNAL(doubleValueChanged(double)), this, SLOT(ChangeFrequency(double)));
-
+    connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTestModule(int)));
+    connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateWaveformType(int)));
+    connect(m_pFrequencySlider, SIGNAL(doubleValueChanged(double)), this, SLOT(UpdateFrequency(double)));
     //audio player
     connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
-
     //microphone
-    connect(ui->MicrophoneVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(ChangeMicVolumn(int)));
-
+    connect(ui->MicrophoneVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateMicVolumn(int)));
     //global volumn
-    connect(ui->TestVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(ChangeGlobalVolumn(int)));
+    connect(ui->TestVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateGlobalVolumn(int)));
 }
 
 void AudioPreferenceDialog::StartAudioTest(bool bStartTest)
 {
     qDebug() << "StartTest: " << bStartTest;
     if(!m_bIsTesting)
-        m_AudioDeviceBase->StartStream();
+        m_pAudioDeviceBase->StartStream();
     else
-        m_AudioDeviceBase->StopStream();
+        m_pAudioDeviceBase->StopStream();
     m_bIsTesting = !m_bIsTesting;
 }
-void AudioPreferenceDialog::ChangeInputDevice(int nSelectedItem)
+
+void AudioPreferenceDialog::UpdateInputDevice(int nSelectedItem)
 {
     QVariant varDevice;
     int nDevice;
-
     varDevice = ui->AudioInputComboBox->itemData(nSelectedItem);
     nDevice = varDevice.toInt();
     qDebug() << "ChangeInputDevice: " << nDevice;
-    m_AudioDeviceBase->put_InputDevice(nDevice,m_bIsTesting);
+    m_pAudioDeviceBase->put_InputDevice(nDevice, m_bIsTesting);
 }
 
-void AudioPreferenceDialog::ChangeOutputDevice(int nSelectedItem)
+void AudioPreferenceDialog::UpdateOutputDevice(int nSelectedItem)
 {
     QVariant varDevice;
     int nDevice;
-
     varDevice = ui->AudioOutputComboBox->itemData(nSelectedItem);
     nDevice = varDevice.toInt();
     qDebug() << "ChangeOutputDevice: " << nDevice;
-    m_AudioDeviceBase->put_OutputDevice(nDevice,m_bIsTesting);
+    m_pAudioDeviceBase->put_OutputDevice(nDevice, m_bIsTesting);
 }
 
-void AudioPreferenceDialog::ChangeSamplingRate(int nSelectedItem)
+void AudioPreferenceDialog::UpdateSamplingRate(int nSelectedItem)
 {
-    qDebug() << "ChangeSamplingRate: "<< nSelectedItem;
-    m_AudioDeviceBase->put_SamplingRate(ui->SamplingRateComboBox->itemData(nSelectedItem).toInt()
-                                        ,m_bIsTesting);
-}
-
-void AudioPreferenceDialog::ChangeBufferSize(int nSelectedItem)
-{
-//    int nBufferSize = ui->BufferSizeSlider->value();
-    m_AudioDeviceBase->put_BufferSize(ui->BufferSizeComboBox->itemData(nSelectedItem).toInt(),
-                                      m_bIsTesting);
-}
-
-
-void AudioPreferenceDialog::ChangeTestModule(int currentTab)
-{
-    qDebug() << "Set tab: " << currentTab;
-    if(m_bIsTesting){
-         m_AudioDeviceBase->StopStream();
-         m_bIsTesting = !m_bIsTesting;
+    int nSamplingRate = ui->SamplingRateComboBox->itemData(nSelectedItem).toInt();
+    if(nSamplingRate != m_pAudioDeviceBase->get_SamplingRate())
+    {
+        qDebug() << "ChangeSamplingRate: "<< nSelectedItem;
+        m_pAudioDeviceBase->put_SamplingRate(nSamplingRate, m_bIsTesting);
     }
-    switch (currentTab) {
+}
+
+void AudioPreferenceDialog::UpdateBufferSize(int nSelectedItem)
+{
+    int nBufferSize = ui->BufferSizeComboBox->itemData(nSelectedItem).toInt();
+    if(nBufferSize != m_pAudioDeviceBase->get_BufferSize())
+    {
+        qDebug() << "ChangeBufferSize: "<< nBufferSize;
+        m_pAudioDeviceBase->put_BufferSize(nBufferSize, m_bIsTesting);
+    }
+}
+void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)
+{
+    qDebug() << "Set tab: " << nCurrentTab;
+    if(m_bIsTesting)
+    {
+        m_pAudioDeviceBase->StopStream();
+        m_bIsTesting = !m_bIsTesting;
+    }
+
+    switch (nCurrentTab)
+    {
     case 0:{
-        m_Synth->eneble();
-        m_AudioPlayer->disable();
-        m_Mic->disable();
+        m_pSynth->eneble();
+        m_pAudioPlayer->disable();
+        m_pMic->disable();
         break;}
     case 1:{
-        m_Synth->disable();
-        m_AudioPlayer->eneble();
-        m_Mic->disable();
+        m_pSynth->disable();
+        m_pAudioPlayer->eneble();
+        m_pMic->disable();
         break;}
     case 2:{
-        m_Synth->disable();
-        m_AudioPlayer->disable();
-        m_Mic->eneble();
+        m_pSynth->disable();
+        m_pAudioPlayer->disable();
+        m_pMic->eneble();
         break;
     }
     default:
         break;
     }
-
 }
 
 //Synthesizer
-void AudioPreferenceDialog::ChangeFrequency(double dblFreq)
+void AudioPreferenceDialog::UpdateFrequency(double dblFreq)
 {
-    qDebug() << "ChangeFrequency: " << dblFreq;
-    m_Synth->put_Frequency(dblFreq);
-    ui->FrequencyValueLabel->setText(QString::number(dblFreq, 'f', 2));
-
+    if(dblFreq != m_pSynth->get_Frequency())
+    {
+        qDebug() << "ChangeFrequency: " << dblFreq;
+        m_pSynth->put_Frequency(dblFreq);
+        ui->FrequencyValueLabel->setText(QString::number(dblFreq, 'f', 2));
+    }
 }
 
-void AudioPreferenceDialog::ChangeWaveformType(int nType){
-    qDebug() << "Change Frequency Type" << nType;
-    m_Synth->put_WaveformType(nType + 1);   //hard coded for array index value
+void AudioPreferenceDialog::UpdateWaveformType(int nType){
+    if(nType != m_pSynth->get_WaveformType() -1)
+    {
+        qDebug() << "Change Frequency Type" << nType;
+        m_pSynth->put_WaveformType(nType);
+    }
 }
 
 //microphone
-void AudioPreferenceDialog::ChangeMicVolumn(int volumn)
+void AudioPreferenceDialog::UpdateMicVolumn(int nVolumn)
 {
-    qDebug() << "ChangeMicVolumn: " << volumn;
+    qDebug() << "ChangeMicVolumn: " << nVolumn;
     //scale from 0, 100 to 0 to 1
-    m_Mic->put_MicrophoneVolumn((float)volumn/100.0);
+    m_pMic->put_MicrophoneVolumn((float)nVolumn / 100.0);
 
 }
 
 //global volumn
-void AudioPreferenceDialog::ChangeGlobalVolumn(int volumn)
+void AudioPreferenceDialog::UpdateGlobalVolumn(int nVolumn)
 {
-    qDebug() << "ChangeMicVolumn: " << volumn;
+    qDebug() << "ChangeMicVolumn: " << nVolumn;
     //scale from 0, 100 to 0 to 1
-    m_GlobalVolumn->set_GlobalVolumn((double)volumn/100.0);
+    m_pGlobalVolumn->set_GlobalVolumn((double)nVolumn / 100.0);
 }
 

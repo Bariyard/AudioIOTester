@@ -13,9 +13,8 @@
 
 #include "CustomComponent/doubleslider.h"
 
-//class DoubleSlider;
 namespace Ui {
-class AudioPreferenceDialog;
+    class AudioPreferenceDialog;
 }
 
 class AudioPreferenceDialog : public QDialog
@@ -25,43 +24,39 @@ class AudioPreferenceDialog : public QDialog
 public:
     AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL);
     virtual ~AudioPreferenceDialog();
+
 signals:
 
 public slots:
     void StartAudioTest(bool bStartTest);
-    void ChangeInputDevice(int nSelectedItem);
-    void ChangeOutputDevice(int nSelectedItem);
-    void ChangeSamplingRate(int nSelectedItem);
-    void ChangeBufferSize(int nSelectedItem);
-
+    void UpdateInputDevice(int nSelectedItem);
+    void UpdateOutputDevice(int nSelectedItem);
+    void UpdateSamplingRate(int nSelectedItem);
+    void UpdateBufferSize(int nSelectedItem);
     //Test module
-    void ChangeTestModule(int currentTab);
+    void UpdateTestModule(int nCurrentTab);
     //Synthesizer
-    void ChangeFrequency(double dblFreq);
-    void ChangeWaveformType(int nType);
-
+    void UpdateFrequency(double dblFreq);
+    void UpdateWaveformType(int nType);
     //Microphone
-    void ChangeMicVolumn(int volumn);
-
+    void UpdateMicVolumn(int nVolumn);
     //global volumn
-    void ChangeGlobalVolumn(int volumn);
+    void UpdateGlobalVolumn(int nVolumn);
 
 private:
-    Ui::AudioPreferenceDialog *ui;
-    QString             m_strWindowTitle;
-    AudioDeviceBase     *m_AudioDeviceBase;
+    Ui::AudioPreferenceDialog   *ui;
+    QString                     m_strWindowTitle;
+    AudioDeviceBase             *m_pAudioDeviceBase;
+    bool                        m_bIsTesting;
 
     //test module
-    Synthesizer         *m_Synth;
-    AudioPlayer         *m_AudioPlayer;
-    Waveform            *m_Waveform;
-    Microphone          *m_Mic;
-    AmplitudeMonitor    *m_AmplitudeMonitor;
-    GlobalVolumn        *m_GlobalVolumn;
-
-    bool                m_bIsTesting;
-
-    DoubleSlider        *m_FrequencySlider;
+    Synthesizer                 *m_pSynth;
+    AudioPlayer                 *m_pAudioPlayer;
+    Waveform                    *m_pWaveform;
+    Microphone                  *m_pMic;
+    AmplitudeMonitor            *m_pAmplitudeMonitor;
+    GlobalVolumn                *m_pGlobalVolumn;
+    DoubleSlider                *m_pFrequencySlider;
 
     void RetriveInformation();
     void Connect();

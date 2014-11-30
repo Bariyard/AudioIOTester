@@ -8,17 +8,16 @@ class Waveform : public QWidget
 {
     Q_OBJECT
 public:
-    Waveform(AudioPlayer * audioPlayer);
+    Waveform(AudioPlayer * pAudioPlayer);
     ~Waveform();
 
-    void put_AudioData(const float *audioData);
-    void put_NumFrame(unsigned long numFrame);
-    void analyzeAudioData();
+    void        put_AudioData(const float *audioData);
+    void        put_NumFrame(unsigned long numFrame);
+    void        analyzeAudioData();
 signals:
 
 protected:
     void paintEvent(QPaintEvent *event);
-
     void dragEnterEvent(QDragEnterEvent* event);
     //this event is called when the mouse enters the widgets area during a drag/drop operation
     void dragMoveEvent(QDragMoveEvent* event);
@@ -28,18 +27,14 @@ protected:
     void dropEvent(QDropEvent* event);
     //this event is called when the drop operation is initiated at the widget
 
-
 public slots:
 
-
 private:
-    AudioPlayer * m_AudioPlayer;
-
-    const float *m_AudioData;
-    unsigned long m_nFrame;
-    QList<QPointF> m_LeftAudioDataPoint;
-    QList<QPointF> m_RightAudioDataPoint;
-
+    AudioPlayer     *m_pAudioPlayer;
+    const float     *m_pAudioData;
+    unsigned long   m_nFrame;
+    QList<QPointF>  m_LeftAudioDataPoint;
+    QList<QPointF>  m_RightAudioDataPoint;
 };
 
 #endif // WAVEFORM_H

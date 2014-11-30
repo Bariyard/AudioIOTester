@@ -7,16 +7,16 @@
 #include <QDebug>
 #include <QDir>
 
-
-Waveform::Waveform(AudioPlayer * audioPlayer)
+Waveform::Waveform(AudioPlayer * pAudioPlayer)
 {
-    m_AudioPlayer = audioPlayer;
+    m_pAudioPlayer = pAudioPlayer;
     setBackgroundRole(QPalette::Base);
     setAcceptDrops(true);
 }
 
-Waveform::~Waveform(){
-    delete m_AudioData;
+Waveform::~Waveform()
+{
+    delete m_pAudioData;
 }
 
 void Waveform::paintEvent(QPaintEvent */*event*/)
@@ -28,8 +28,8 @@ void Waveform::paintEvent(QPaintEvent */*event*/)
                             painter.viewport().right(),
                             painter.viewport().bottom()),Qt::black);
 
-
-    auto scaleToMiddle =[] (float prevY, float h){
+    auto scaleToMiddle =[] (float prevY, float h)
+    {
         auto middleY = h/2.0;
         return (prevY*middleY)+middleY;
     };
@@ -37,7 +37,6 @@ void Waveform::paintEvent(QPaintEvent */*event*/)
     if(!m_LeftAudioDataPoint.isEmpty() && !m_RightAudioDataPoint.isEmpty())
     {
         painter.setPen(Qt::cyan);
-
         float incrementer = (float)width()/(float)m_LeftAudioDataPoint.size();
         float worldX = 0.0;
         for(QList<QPointF>::iterator stlIter = m_LeftAudioDataPoint.begin(); stlIter != m_LeftAudioDataPoint.end()-1; stlIter++)
@@ -72,7 +71,6 @@ void Waveform::dropEvent(QDropEvent *event)
 {
     qDebug() <<"Drop file to waveform widget" ;
     const QMimeData* mimeData = event->mimeData();
-
     // check for our needed mime type, here a file or a list of files
     if (mimeData->hasUrls())
     {
@@ -80,17 +78,16 @@ void Waveform::dropEvent(QDropEvent *event)
         path = path.section('/',2);
         qDebug() << "Path: " << path;
 
-        m_AudioPlayer->set_AudioFilePath(path);
-        m_AudioData = m_AudioPlayer->get_AudioData();
-        m_nFrame = m_AudioPlayer->get_NumberOfSample();
+        m_pAudioPlayer->set_AudioFilePath(path);
+        m_pAudioData    = m_pAudioPlayer->get_AudioData();
+        m_nFrame        = m_pAudioPlayer->get_NumberOfSample();
         analyzeAudioData();
     }
-
 }
 
 void Waveform::put_AudioData(const float *audioData)
 {
-    m_AudioData = audioData;
+    m_pAudioData = audioData;
 }
 
 void Waveform::put_NumFrame(unsigned long numFrame)
@@ -100,22 +97,19 @@ void Waveform::put_NumFrame(unsigned long numFrame)
 
 void Waveform::analyzeAudioData()
 {
-    if(m_AudioData)
+    if(m_pAudioData)
     {
         unsigned long frameCounter = 0;
         float incrementer = (float)width()/(m_nFrame/2.0);
         float x1, y1, x2, y2;
         for(double i = 0.0; frameCounter< m_nFrame-1; i+=incrementer){
             //left
-
             x1 = 0;
-            y1 = m_AudioData[frameCounter];
+            y1 = m_pAudioData[frameCounter];
             m_LeftAudioDataPoint.push_back(QPointF(x1,y1));
-
             x2 = 0;
-            y2 = m_AudioData[frameCounter+1] ;
+            y2 = m_pAudioData[frameCounter+1] ;
             m_RightAudioDataPoint.push_back(QPointF(x2,y2));
-
             frameCounter+=2;
         }
     }

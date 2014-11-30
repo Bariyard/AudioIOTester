@@ -6,7 +6,7 @@
 class GlobalVolumn :public TestModule
 {
 public:
-    GlobalVolumn(AudioDeviceBase * audioDevicebase);
+    GlobalVolumn(AudioDeviceBase * pAudioDeviceBase);
     virtual ~GlobalVolumn();
 
     virtual void        reset();
@@ -19,7 +19,7 @@ public:
     void                set_GlobalVolumn(double dblVolumn);
     double              get_GlobalVolumn();
 private:
-    AudioDeviceBase     *m_AudioDeviceBase;
+    AudioDeviceBase     *m_pAudioDeviceBase;
     bool                m_bIsModuleEnable;
     double              m_dblGlobalVolumn;
 };

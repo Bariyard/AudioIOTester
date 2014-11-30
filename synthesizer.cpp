@@ -5,18 +5,20 @@
 #define M_PI (3.14159265)
 #endif
 
-Synthesizer::Synthesizer(AudioDeviceBase* s):
+QString WAVEFORM_TYPE_STRING[] = {"sin", "saw", "triangle", "square"};
+
+Synthesizer::Synthesizer(AudioDeviceBase* pAudioDeviceBase):
     m_dblAudioFrequency(220.00),
     m_dblDefaultAudioFrequency(220.00)
 {
-    m_AudioDeviceBase = s;
-    m_bIsModuleEnable = false;
+    m_pAudioDeviceBase  = pAudioDeviceBase;
+    m_bIsModuleEnable   = false;
     m_dblAudioFrequency = m_dblDefaultAudioFrequency;
 
     //-------------wavetable oscillator----------------------
-    m_fReadIndex = 0.0;
-    m_fIncreament = WAVETABLE_SAMPLE_RATE * m_dblAudioFrequency/m_AudioDeviceBase->get_SamplingRate();
-    m_eOscType = Sinusoid;
+    m_fReadIndex    = 0.0;
+    m_fIncreament   = WAVETABLE_SAMPLE_RATE * m_dblAudioFrequency/m_pAudioDeviceBase->get_SamplingRate();
+    m_eOscType      = Sinusoid;
 
     //slope and y-intercept value for the
     //Triangle Wave
@@ -45,26 +47,25 @@ Synthesizer::Synthesizer(AudioDeviceBase* s):
     for(int i = 0; i < 1024; i++){
         //sample the sinusoid 1024 point
         //sin(wnT) = sin(2pi*i/1024)
-        m_SinArray[i] = sin((double)i/1024.0 * (M_PI*2.));
+        m_fSinArray[i] = sin((double)i/1024.0 * (M_PI*2.));
 
 
         //Sawtooth
-        m_SawToothArray[i] = i < 512 ? ms1* i + bs1 : ms2*(i-511) +bs2;
+        m_fSawToothArray[i] = i < 512 ? ms1* i + bs1 : ms2*(i-511) +bs2;
 
         //Triangle
         if(i < 256)
-            m_TriangleArray[i] = mt1*i + bt1; // rising edge1
+            m_fTriangleArray[i] = mt1*i + bt1; // rising edge1
         else if( i >= 256 && i < 768)
-            m_TriangleArray[i] = mtf2*(i-256) + btf2; // falling edge
+            m_fTriangleArray[i] = mtf2*(i-256) + btf2; // falling edge
         else
-            m_TriangleArray[i] = mt2 *(i-768) + bt2; //rising edge2
+            m_fTriangleArray[i] = mt2 *(i-768) + bt2; //rising edge2
 
         //square
-        m_SquareArray[i] = i < 512? +1.0 : -1.0;
+        m_fSquareArray[i] = i < 512? +1.0 : -1.0;
     }
 
-    //register testing module to audiodevicebase
-    m_AudioDeviceBase->registerTestModule(this);
+    m_pAudioDeviceBase->RegisterTestModule(this);
 }
 
 Synthesizer::~Synthesizer()
@@ -96,9 +97,8 @@ float Synthesizer::get_MaximumFrequency()
 void Synthesizer::reset()
 {
     m_fReadIndex = 0.0;
-    m_fIncreament = WAVETABLE_SAMPLE_RATE * m_dblAudioFrequency/(float)m_AudioDeviceBase->get_SamplingRate();
+    m_fIncreament = WAVETABLE_SAMPLE_RATE * m_dblAudioFrequency/(float)m_pAudioDeviceBase->get_SamplingRate();
 }
-
 
 void Synthesizer::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
@@ -127,20 +127,20 @@ void Synthesizer::process(const void */*inputBuffer*/, void *outputBuffer, const
 
             switch (m_eOscType) {
             case Sinusoid:
-                fOutSample = (float)linear_interpolation(0, 1, m_SinArray[nReadIndex],
-                                                         m_SinArray[nReadIndexNext], fFrac);
+                fOutSample = (float)linear_interpolation(0, 1, m_fSinArray[nReadIndex],
+                                                         m_fSinArray[nReadIndexNext], fFrac);
                 break;
             case Sawtooth:
-                fOutSample = (float)linear_interpolation(0, 1, m_SawToothArray[nReadIndex],
-                                                         m_SawToothArray[nReadIndexNext], fFrac);
+                fOutSample = (float)linear_interpolation(0, 1, m_fSawToothArray[nReadIndex],
+                                                         m_fSawToothArray[nReadIndexNext], fFrac);
                 break;
             case Triangle:
-                fOutSample = (float)linear_interpolation(0, 1, m_TriangleArray[nReadIndex],
-                                                         m_TriangleArray[nReadIndexNext], fFrac);
+                fOutSample = (float)linear_interpolation(0, 1, m_fTriangleArray[nReadIndex],
+                                                         m_fTriangleArray[nReadIndexNext], fFrac);
                 break;
             case Square:
-                fOutSample = (float)linear_interpolation(0, 1, m_SquareArray[nReadIndex],
-                                                         m_SquareArray[nReadIndexNext], fFrac);
+                fOutSample = (float)linear_interpolation(0, 1, m_fSquareArray[nReadIndex],
+                                                         m_fSquareArray[nReadIndexNext], fFrac);
                 break;
             default:
                 fOutSample = 0.0;
@@ -178,5 +178,10 @@ int Synthesizer::get_WaveformType()
 
 void Synthesizer::put_WaveformType(int nType)
 {
-    m_eOscType = OscillatorType(nType);
+    m_eOscType = OscillatorType(nType + 1); //hard code for array index to enum
+}
+
+QString* Synthesizer::get_WaveformTypeString()
+{
+    return WAVEFORM_TYPE_STRING;
 }

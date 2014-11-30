@@ -10,10 +10,10 @@ class AmplitudeMonitor : public QWidget
 {
     Q_OBJECT
 public:
-    AmplitudeMonitor(Microphone *microphone);
+    AmplitudeMonitor(Microphone *pMicrophone);
     ~AmplitudeMonitor();
 
-    void setAmpLevel(float *data, int size);
+    void set_AmpLevel(float *pData, int nSize);
 protected:
     void paintEvent(QPaintEvent *event);
 
@@ -22,9 +22,9 @@ signals:
 public slots:
 
 private:
-    Microphone  *m_Mic;
+    Microphone  *m_pMic;
     float       m_fVolumn;
-    float       m_amplevel;
+    float       m_fAmpLevel;
 
 };
 

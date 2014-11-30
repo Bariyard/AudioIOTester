@@ -1,12 +1,11 @@
 #ifndef MICROPHONE_H
 #define MICROPHONE_H
 
-#include "amplitudemonitor.h"
-#include "testmodule.h"
 #include "audiodevicebase.h"
+#include "testmodule.h"
+#include "amplitudemonitor.h"
 
 class AmplitudeMonitor;
-
 
 class Microphone : public TestModule
 {
@@ -21,17 +20,17 @@ public:
     virtual void        disable();
     virtual bool        isEnabled();
 
-    void  put_MicrophoneVolumn(float fVolumn);
-    float get_MicrophoneVolumn();
+    void                put_MicrophoneVolumn(float fVolumn);
+    float               get_MicrophoneVolumn();
 
-    void registerAmplitudeMonitor(AmplitudeMonitor * amp);
+    void                RegisterAmplitudeMonitor(AmplitudeMonitor * pAmplitudeMonitor);
 
 private:
-    AudioDeviceBase     *m_AudioDeviceBase;
+    AudioDeviceBase     *m_pAudioDeviceBase;
     bool                m_bIsModuleEnable;
     float               m_fMicVolumn;
 
-    AmplitudeMonitor    *m_AmpMonitor;
+    AmplitudeMonitor    *m_pAmpMonitor;
 
 };
 

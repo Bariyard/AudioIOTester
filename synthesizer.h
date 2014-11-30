@@ -15,11 +15,10 @@ enum OscillatorType{
     Square   = 4
 };
 
-
 class Synthesizer : public TestModule
 {
 public:
-    Synthesizer(AudioDeviceBase* s);
+    Synthesizer(AudioDeviceBase* pAudioDeviceBase);
     virtual ~Synthesizer();
 
     virtual void        reset();
@@ -36,18 +35,18 @@ public:
 
     int                 get_WaveformType();
     void                put_WaveformType(int nType);
-
+    QString*            get_WaveformTypeString();
 
 private:
-    AudioDeviceBase     *m_AudioDeviceBase;
+    AudioDeviceBase     *m_pAudioDeviceBase;
     double              m_dblAudioFrequency;
     double              m_dblDefaultAudioFrequency;
 
     //-------------wavetable oscillator------------------- ---
-    float               m_SinArray[WAVETABLE_SAMPLE_RATE];            //sine
-    float               m_SawToothArray[WAVETABLE_SAMPLE_RATE];       //saw
-    float               m_TriangleArray[WAVETABLE_SAMPLE_RATE];       //Triangle
-    float               m_SquareArray[WAVETABLE_SAMPLE_RATE];         //Square
+    float               m_fSinArray[WAVETABLE_SAMPLE_RATE];            //sine
+    float               m_fSawToothArray[WAVETABLE_SAMPLE_RATE];       //saw
+    float               m_fTriangleArray[WAVETABLE_SAMPLE_RATE];       //Triangle
+    float               m_fSquareArray[WAVETABLE_SAMPLE_RATE];         //Square
 
     float               m_fReadIndex;                                 //index to read wave data
     float               m_fIncreament;                                //increament value
