@@ -15,11 +15,11 @@ enum OscillatorType{
     Square   = 4
 };
 
-class Synthesizer : public TestModule
+class Oscillator : public TestModule
 {
 public:
-    Synthesizer(AudioDeviceBase* pAudioDeviceBase);
-    virtual ~Synthesizer();
+    Oscillator(AudioDeviceBase* pAudioDeviceBase);
+    virtual ~Oscillator();
 
     virtual void        reset();
     virtual void        process(const void *inputBuffer, void *outputBuffer, const unsigned long framesPerBuffer);

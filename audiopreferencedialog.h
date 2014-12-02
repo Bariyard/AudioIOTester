@@ -2,16 +2,15 @@
 #define AUDIOPREFERENCEDIALOG_H
 
 #include "audiodevicebase.h"
-#include "synthesizer.h"
 #include "audioplayer.h"
 #include "waveform.h"
 #include "microphone.h"
 #include "amplitudemonitor.h"
 #include "globalvolumn.h"
+
+#include "synthesizerview.h"
 #include <QDialog>
 #include <QPointer>
-
-#include "CustomComponent/doubleslider.h"
 
 namespace Ui {
     class AudioPreferenceDialog;
@@ -22,7 +21,7 @@ class AudioPreferenceDialog : public QDialog
     Q_OBJECT
 
 public:
-    AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* audioBase = NULL);
+    AudioPreferenceDialog(QWidget *parent = 0, AudioDeviceBase* pAudioDeviceBase = NULL);
     virtual ~AudioPreferenceDialog();
 
 signals:
@@ -35,9 +34,6 @@ public slots:
     void UpdateBufferSize(int nSelectedItem);
     //Test module
     void UpdateTestModule(int nCurrentTab);
-    //Synthesizer
-    void UpdateFrequency(double dblFreq);
-    void UpdateWaveformType(int nType);
     //Microphone
     void UpdateMicVolumn(int nVolumn);
     //global volumn
@@ -50,13 +46,13 @@ private:
     bool                        m_bIsTesting;
 
     //test module
-    Synthesizer                 *m_pSynth;
     AudioPlayer                 *m_pAudioPlayer;
     Waveform                    *m_pWaveform;
     Microphone                  *m_pMic;
     AmplitudeMonitor            *m_pAmplitudeMonitor;
     GlobalVolumn                *m_pGlobalVolumn;
-    DoubleSlider                *m_pFrequencySlider;
+
+    SynthesizerView             *m_pSynth;
 
     void RetriveInformation();
     void Connect();

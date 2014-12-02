@@ -1,4 +1,5 @@
-#include "synthesizer.h"
+
+#include "Oscillator.h"
 #include <math.h>
 
 #ifndef M_PI
@@ -7,7 +8,7 @@
 
 QString WAVEFORM_TYPE_STRING[] = {"sin", "saw", "triangle", "square"};
 
-Synthesizer::Synthesizer(AudioDeviceBase* pAudioDeviceBase):
+Oscillator::Oscillator(AudioDeviceBase* pAudioDeviceBase):
     m_dblAudioFrequency(220.00),
     m_dblDefaultAudioFrequency(220.00)
 {
@@ -68,39 +69,39 @@ Synthesizer::Synthesizer(AudioDeviceBase* pAudioDeviceBase):
     m_pAudioDeviceBase->RegisterTestModule(this);
 }
 
-Synthesizer::~Synthesizer()
+Oscillator::~Oscillator()
 {
 
 }
 
-float Synthesizer::get_Frequency()
+float Oscillator::get_Frequency()
 {
     return m_dblAudioFrequency;
 }
 
-void Synthesizer::put_Frequency(double dblFrequency)
+void Oscillator::put_Frequency(double dblFrequency)
 {
     m_dblAudioFrequency = dblFrequency;
     reset();
 }
 
-float Synthesizer::get_MinimumFrequency()
+float Oscillator::get_MinimumFrequency()
 {
     return MINIMUM_FREQUENCY;
 }
 
-float Synthesizer::get_MaximumFrequency()
+float Oscillator::get_MaximumFrequency()
 {
     return MAXIMUM_FREQUENCY;
 }
 
-void Synthesizer::reset()
+void Oscillator::reset()
 {
     m_fReadIndex = 0.0;
     m_fIncreament = WAVETABLE_SAMPLE_RATE * m_dblAudioFrequency/(float)m_pAudioDeviceBase->get_SamplingRate();
 }
 
-void Synthesizer::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
+void Oscillator::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
     //lambda function for calculate linear interpolation
     auto linear_interpolation = [](float x1, float x2, float y1, float y2, float x)
@@ -156,32 +157,32 @@ void Synthesizer::process(const void */*inputBuffer*/, void *outputBuffer, const
     }
 }
 
-void Synthesizer::eneble()
+void Oscillator::eneble()
 {
     m_bIsModuleEnable = true;
 }
 
-void Synthesizer::disable()
+void Oscillator::disable()
 {
     m_bIsModuleEnable = false;
 }
 
-bool Synthesizer::isEnabled()
+bool Oscillator::isEnabled()
 {
     return m_bIsModuleEnable;
 }
 
-int Synthesizer::get_WaveformType()
+int Oscillator::get_WaveformType()
 {
     return m_eOscType;
 }
 
-void Synthesizer::put_WaveformType(int nType)
+void Oscillator::put_WaveformType(int nType)
 {
     m_eOscType = OscillatorType(nType + 1); //hard code for array index to enum
 }
 
-QString* Synthesizer::get_WaveformTypeString()
+QString* Oscillator::get_WaveformTypeString()
 {
     return WAVEFORM_TYPE_STRING;
 }

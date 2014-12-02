@@ -19,29 +19,32 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     audiodevicebase.cpp \
     audiopreferencedialog.cpp \
-    synthesizer.cpp \
     testmodule.cpp \
     audioplayer.cpp \
     waveform.cpp \
     microphone.cpp \
     amplitudemonitor.cpp \
     CustomComponent/doubleslider.cpp \
-    globalvolumn.cpp
+    globalvolumn.cpp \
+    synthesizerview.cpp \
+    oscillator.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
     audiopreferencedialog.h \
-    synthesizer.h \
     testmodule.h \
     audioplayer.h \
     waveform.h \
     microphone.h \
     amplitudemonitor.h \
     CustomComponent/doubleslider.h \
-    globalvolumn.h
+    globalvolumn.h \
+    synthesizerview.h \
+    oscillator.h
 
 FORMS    += mainwindow.ui \
-    audiopreferencedialog.ui
+    audiopreferencedialog.ui \
+    synthesizerview.ui
 
 #include(3rdParties/portaudio)
 INCLUDEPATH += '3rdParties/portaudio/include'

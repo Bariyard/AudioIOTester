@@ -172,7 +172,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="SynthesizerTab">
         <property name="sizePolicy">
@@ -198,69 +198,7 @@
           <number>5</number>
          </property>
          <item row="0" column="0">
-          <layout class="QVBoxLayout" name="SynthesizerVerticalLayout">
-           <item>
-            <layout class="QHBoxLayout" name="FrequencyLayout">
-             <item>
-              <layout class="QHBoxLayout" name="FrequencyHorizontalLayout">
-               <item>
-                <widget class="QLabel" name="FrequencyLabel">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Frequency</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="FrequencyValueLabel">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>220</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="FrequencyHertzLabel">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Hz</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="waveformHorizontalLayout">
-             <item>
-              <widget class="QLabel" name="waveformLabel">
-               <property name="text">
-                <string>Waveform</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="waveformComboBox"/>
-             </item>
-            </layout>
-           </item>
-          </layout>
+          <layout class="QGridLayout" name="SyntheSizerGridLayout"/>
          </item>
         </layout>
        </widget>

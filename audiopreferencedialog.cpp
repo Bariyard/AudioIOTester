@@ -2,23 +2,25 @@
 #include "ui_audiopreferencedialog.h"
 
 
-AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* pAudioDeviceBase) :
+AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent, AudioDeviceBase* pAudioDeviceBase) :
     QDialog(parent),
     ui(new Ui::AudioPreferenceDialog),
     m_pAudioDeviceBase(pAudioDeviceBase)
 {
+
     ui->setupUi(this);
     setFixedSize(this->size());
     m_strWindowTitle    = "Audio I/O Tester";
     setWindowTitle(m_strWindowTitle);
 
     m_bIsTesting        = false;
-    m_pSynth            = new Synthesizer(m_pAudioDeviceBase);
     m_pAudioPlayer      = new AudioPlayer(m_pAudioDeviceBase);
     m_pWaveform         = new Waveform(m_pAudioPlayer);
     m_pMic              = new Microphone(m_pAudioDeviceBase);
     m_pAmplitudeMonitor = new AmplitudeMonitor(m_pMic);
     m_pGlobalVolumn     = new GlobalVolumn(m_pAudioDeviceBase);
+    m_pSynth             = new SynthesizerView(m_pAudioDeviceBase);
+
 
     RetriveInformation();
     Connect();
@@ -28,11 +30,11 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent,AudioDeviceBase* pA
 AudioPreferenceDialog::~AudioPreferenceDialog()
 {
     delete ui;
-    delete m_pSynth;
     delete m_pAudioPlayer;
     delete m_pWaveform;
     delete m_pMic;
     delete m_pAmplitudeMonitor;
+    delete m_pSynth;
 }
 
 void AudioPreferenceDialog::RetriveInformation()
@@ -94,23 +96,7 @@ void AudioPreferenceDialog::RetriveInformation()
         }
     }
 
-    //waveform type
-    int nWaveformType;
-    nWaveformType = m_pSynth->get_WaveformType();
-    QString *strWaveformType = m_pSynth->get_WaveformTypeString();
-    for(int i = 0; i < 4 ; i ++)
-    {
-        ui->waveformComboBox->addItem(strWaveformType[i]);
-    }
-
-    //Frequency double slider
-    m_pFrequencySlider = new DoubleSlider();
-    m_pFrequencySlider->setOrientation(Qt::Horizontal);
-    m_pFrequencySlider->setRange(0,100);
-    m_pFrequencySlider->setScale(16.35,7902.13);
-    ui->FrequencyLayout->addWidget(m_pFrequencySlider);
-    //enable oscillator first
-    m_pSynth->eneble();
+    ui->SyntheSizerGridLayout->addWidget(m_pSynth);
 
     //audio player tab
     ui->AudioPlayerVerticalLayout->addWidget(m_pWaveform);
@@ -133,10 +119,9 @@ void AudioPreferenceDialog::Connect()
     connect(ui->AudioOutputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateOutputDevice(int)));
     connect(ui->SamplingRateComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateSamplingRate(int)));
     connect(ui->BufferSizeComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateBufferSize(int)));
-    //oscillator
+
     connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTestModule(int)));
-    connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateWaveformType(int)));
-    connect(m_pFrequencySlider, SIGNAL(doubleValueChanged(double)), this, SLOT(UpdateFrequency(double)));
+
     //audio player
     connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
     //microphone
@@ -206,17 +191,17 @@ void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)
     switch (nCurrentTab)
     {
     case 0:{
-        m_pSynth->eneble();
+        //m_pOscillator->eneble();
         m_pAudioPlayer->disable();
         m_pMic->disable();
         break;}
     case 1:{
-        m_pSynth->disable();
+        //m_pOscillator->disable();
         m_pAudioPlayer->eneble();
         m_pMic->disable();
         break;}
     case 2:{
-        m_pSynth->disable();
+        //m_pOscillator->disable();
         m_pAudioPlayer->disable();
         m_pMic->eneble();
         break;
@@ -226,24 +211,7 @@ void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)
     }
 }
 
-//Synthesizer
-void AudioPreferenceDialog::UpdateFrequency(double dblFreq)
-{
-    if(dblFreq != m_pSynth->get_Frequency())
-    {
-        qDebug() << "ChangeFrequency: " << dblFreq;
-        m_pSynth->put_Frequency(dblFreq);
-        ui->FrequencyValueLabel->setText(QString::number(dblFreq, 'f', 2));
-    }
-}
 
-void AudioPreferenceDialog::UpdateWaveformType(int nType){
-    if(nType != m_pSynth->get_WaveformType() -1)
-    {
-        qDebug() << "Change Frequency Type" << nType;
-        m_pSynth->put_WaveformType(nType);
-    }
-}
 
 //microphone
 void AudioPreferenceDialog::UpdateMicVolumn(int nVolumn)
