@@ -4,11 +4,10 @@
 #include "audiodevicebase.h"
 #include "audioplayer.h"
 #include "waveform.h"
-#include "microphone.h"
-#include "amplitudemonitor.h"
 #include "globalvolumn.h"
 
 #include "synthesizerview.h"
+#include "microphoneview.h"
 #include <QDialog>
 #include <QPointer>
 
@@ -34,8 +33,6 @@ public slots:
     void UpdateBufferSize(int nSelectedItem);
     //Test module
     void UpdateTestModule(int nCurrentTab);
-    //Microphone
-    void UpdateMicVolumn(int nVolumn);
     //global volumn
     void UpdateGlobalVolumn(int nVolumn);
 
@@ -48,11 +45,10 @@ private:
     //test module
     AudioPlayer                 *m_pAudioPlayer;
     Waveform                    *m_pWaveform;
-    Microphone                  *m_pMic;
-    AmplitudeMonitor            *m_pAmplitudeMonitor;
     GlobalVolumn                *m_pGlobalVolumn;
 
     SynthesizerView             *m_pSynth;
+    MicrophoneView              *m_pMic;
 
     void RetriveInformation();
     void Connect();

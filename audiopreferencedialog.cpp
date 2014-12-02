@@ -16,11 +16,11 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent, AudioDeviceBase* p
     m_bIsTesting        = false;
     m_pAudioPlayer      = new AudioPlayer(m_pAudioDeviceBase);
     m_pWaveform         = new Waveform(m_pAudioPlayer);
-    m_pMic              = new Microphone(m_pAudioDeviceBase);
-    m_pAmplitudeMonitor = new AmplitudeMonitor(m_pMic);
-    m_pGlobalVolumn     = new GlobalVolumn(m_pAudioDeviceBase);
-    m_pSynth             = new SynthesizerView(m_pAudioDeviceBase);
 
+    m_pSynth            = new SynthesizerView(m_pAudioDeviceBase);
+    m_pMic              = new MicrophoneView(m_pAudioDeviceBase);
+
+    m_pGlobalVolumn     = new GlobalVolumn(m_pAudioDeviceBase);
 
     RetriveInformation();
     Connect();
@@ -29,12 +29,11 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent, AudioDeviceBase* p
 
 AudioPreferenceDialog::~AudioPreferenceDialog()
 {
-    delete ui;
     delete m_pAudioPlayer;
     delete m_pWaveform;
-    delete m_pMic;
-    delete m_pAmplitudeMonitor;
     delete m_pSynth;
+    delete m_pMic;
+    delete ui;
 }
 
 void AudioPreferenceDialog::RetriveInformation()
@@ -96,21 +95,19 @@ void AudioPreferenceDialog::RetriveInformation()
         }
     }
 
+    UpdateTestModule(ui->TestingTabWidget->currentIndex());
+    //Synthesizer tab
     ui->SyntheSizerGridLayout->addWidget(m_pSynth);
-
-    //audio player tab
+    //Audio player tab
     ui->AudioPlayerVerticalLayout->addWidget(m_pWaveform);
     ui->AudioPlayerTab->acceptDrops();
     m_pWaveform->show();
-
-    //microphone tab
-    ui->MicrophoneVolumnHorizontalSlider->setRange(0,100);
-    ui->MicrophoneVolumnHorizontalSlider->setValue(m_pMic->get_MicrophoneVolumn()*100);
-    ui->MicrophoneGridLayout->addWidget(m_pAmplitudeMonitor);
-    m_pAmplitudeMonitor->show();
+    //Microphone tab
+    ui->MicrophoneGridLayout->addWidget(m_pMic);
 
     //global volumn
     ui->TestVolumnHorizontalSlider->setValue(m_pGlobalVolumn->get_GlobalVolumn()*100);
+    m_pGlobalVolumn->eneble();
 }
 
 void AudioPreferenceDialog::Connect()
@@ -119,15 +116,12 @@ void AudioPreferenceDialog::Connect()
     connect(ui->AudioOutputComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateOutputDevice(int)));
     connect(ui->SamplingRateComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateSamplingRate(int)));
     connect(ui->BufferSizeComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateBufferSize(int)));
-
-    connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTestModule(int)));
-
-    //audio player
-    connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
-    //microphone
-    connect(ui->MicrophoneVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateMicVolumn(int)));
     //global volumn
     connect(ui->TestVolumnHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateGlobalVolumn(int)));
+
+    connect(ui->TestingTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTestModule(int)));
+    //audio player
+    connect(ui->TestPushButton,SIGNAL(clicked(bool)),this,SLOT(StartAudioTest(bool)));
 }
 
 void AudioPreferenceDialog::StartAudioTest(bool bStartTest)
@@ -179,6 +173,15 @@ void AudioPreferenceDialog::UpdateBufferSize(int nSelectedItem)
         m_pAudioDeviceBase->put_BufferSize(nBufferSize, m_bIsTesting);
     }
 }
+
+//global volumn
+void AudioPreferenceDialog::UpdateGlobalVolumn(int nVolumn)
+{
+    qDebug() << "ChangeMicVolumn: " << nVolumn;
+    //scale from 0, 100 to 0 to 1
+    m_pGlobalVolumn->set_GlobalVolumn((double)nVolumn / 100.0);
+}
+
 void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)
 {
     qDebug() << "Set tab: " << nCurrentTab;
@@ -191,19 +194,19 @@ void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)
     switch (nCurrentTab)
     {
     case 0:{
-        //m_pOscillator->eneble();
+        m_pSynth->Eneble();
         m_pAudioPlayer->disable();
-        m_pMic->disable();
+        m_pMic->Disable();
         break;}
     case 1:{
-        //m_pOscillator->disable();
+        m_pSynth->Disable();
         m_pAudioPlayer->eneble();
-        m_pMic->disable();
+        m_pMic->Disable();
         break;}
     case 2:{
-        //m_pOscillator->disable();
+        m_pSynth->Disable();
         m_pAudioPlayer->disable();
-        m_pMic->eneble();
+        m_pMic->Eneble();
         break;
     }
     default:
@@ -211,22 +214,4 @@ void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)
     }
 }
 
-
-
-//microphone
-void AudioPreferenceDialog::UpdateMicVolumn(int nVolumn)
-{
-    qDebug() << "ChangeMicVolumn: " << nVolumn;
-    //scale from 0, 100 to 0 to 1
-    m_pMic->put_MicrophoneVolumn((float)nVolumn / 100.0);
-
-}
-
-//global volumn
-void AudioPreferenceDialog::UpdateGlobalVolumn(int nVolumn)
-{
-    qDebug() << "ChangeMicVolumn: " << nVolumn;
-    //scale from 0, 100 to 0 to 1
-    m_pGlobalVolumn->set_GlobalVolumn((double)nVolumn / 100.0);
-}
 

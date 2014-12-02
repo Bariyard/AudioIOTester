@@ -24,12 +24,6 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     m_pFrequencySlider->setScale(16.35,7902.13);
     ui->SynthesizerGridLayout->addWidget(m_pFrequencySlider,0,2);
     ui->FrequencyValueLabel->setScaledContents(false);
-//    ui->FrequencyValueLabel->setTextFormat(Qt::TextIncludeTrailingSpaces);
-//    ui->FrequencyValueLabel->setTextFormat(Qt::TextIncludeTrailingSpaces);
-//    ui->FrequencyValueLabel->setTextInteractionFlags(Qt::TextIncludeTrailingSpaces);
-//    ui->FrequencyValueLabel->setTextInteractionFlags(QFlags<Qt::TextIncludeTrailingSpaces>);
-
-    //ui->FrequencyValueLabel->setTextFormat(Qt::PlainText);
     UpdateFrequency(m_pOscillator->get_Frequency());
     //enable oscillator first
     m_pOscillator->eneble();
@@ -63,4 +57,14 @@ void SynthesizerView::UpdateWaveformType(int nType){
         qDebug() << "Change Frequency Type" << nType;
         m_pOscillator->put_WaveformType(nType);
     }
+}
+
+void SynthesizerView::Eneble()
+{
+    m_pOscillator->eneble();
+}
+
+void SynthesizerView::Disable()
+{
+    m_pOscillator->disable();
 }

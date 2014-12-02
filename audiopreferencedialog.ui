@@ -172,7 +172,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="SynthesizerTab">
         <property name="sizePolicy">
@@ -217,30 +217,8 @@
          <string>Microphone</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_5">
-         <item row="1" column="0">
-          <layout class="QGridLayout" name="MicrophoneGridLayout">
-           <item row="0" column="0">
-            <widget class="QLabel" name="MicrophoneVolumnLabel">
-             <property name="text">
-              <string>Mic Volumn                </string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSlider" name="MicrophoneVolumnHorizontalSlider">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="MicrophoneGridLayout"/>
          </item>
         </layout>
        </widget>

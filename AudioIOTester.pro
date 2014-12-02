@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     CustomComponent/doubleslider.cpp \
     globalvolumn.cpp \
     synthesizerview.cpp \
-    oscillator.cpp
+    oscillator.cpp \
+    microphoneview.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -40,11 +41,13 @@ HEADERS  += mainwindow.h \
     CustomComponent/doubleslider.h \
     globalvolumn.h \
     synthesizerview.h \
-    oscillator.h
+    oscillator.h \
+    microphoneview.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \
-    synthesizerview.ui
+    synthesizerview.ui \
+    microphoneview.ui
 
 #include(3rdParties/portaudio)
 INCLUDEPATH += '3rdParties/portaudio/include'

@@ -17,6 +17,8 @@ class SynthesizerView : public QWidget
 public:
     SynthesizerView(AudioDeviceBase* pAudioDeviceBase);
     ~SynthesizerView();
+    void Eneble();
+    void Disable();
 
 public slots:
     //Synthesizer
