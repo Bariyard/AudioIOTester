@@ -81,7 +81,12 @@ void Waveform::dropEvent(QDropEvent *event)
         m_pAudioPlayer->set_AudioFilePath(path);
         m_pAudioData    = m_pAudioPlayer->get_AudioData();
         m_nFrame        = m_pAudioPlayer->get_NumberOfSample();
+        if(!m_RightAudioDataPoint.isEmpty())
+            m_RightAudioDataPoint.clear();
+        if(!m_LeftAudioDataPoint.isEmpty())
+            m_LeftAudioDataPoint.clear();
         analyzeAudioData();
+        update();
     }
 }
 
@@ -99,6 +104,7 @@ void Waveform::analyzeAudioData()
 {
     if(m_pAudioData)
     {
+        qDebug() << "analyze audio data";
         unsigned long frameCounter = 0;
         float incrementer = (float)width()/(m_nFrame/2.0);
         float x1, y1, x2, y2;

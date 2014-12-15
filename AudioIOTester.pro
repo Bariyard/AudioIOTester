@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     globalvolumn.cpp \
     synthesizerview.cpp \
     oscillator.cpp \
-    microphoneview.cpp
+    microphoneview.cpp \
+    audiofile.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -42,7 +43,8 @@ HEADERS  += mainwindow.h \
     globalvolumn.h \
     synthesizerview.h \
     oscillator.h \
-    microphoneview.h
+    microphoneview.h \
+    audiofile.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \

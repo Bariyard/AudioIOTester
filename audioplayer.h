@@ -2,6 +2,7 @@
 #define AUDIOPLAYER_H
 #include "testmodule.h"
 #include "audiodevicebase.h"
+#include "audiofile.h"
 
 class AudioPlayer : public TestModule
 {
@@ -23,19 +24,9 @@ public:
 
 private:
     AudioDeviceBase     *m_pAudioDeviceBase;
+    AudioFile           *m_pAudioFile;
+    float               *m_pCurrentFrame;
     bool                m_bIsModuleEnable;
-
-    float               *m_pAudioData;
-    unsigned long       m_nNumFrame;
-    float               *m_pStartFrame;
-    float               *m_pEndFrame;
-    unsigned long       m_nCurrentFrame;
-    bool                m_bEndOfFile;
-
-    void                readAudioFile(char *pFilename);
-    QString             m_strAudioPath;
-
-
 };
 
 #endif // AUDIOPLAYER_H
