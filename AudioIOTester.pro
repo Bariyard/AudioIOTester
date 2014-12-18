@@ -58,3 +58,7 @@ LIBS += -L/usr/local/lib -lportaudio
 #include(3rdParties/portaudio)
 INCLUDEPATH += '3rdParties/libsndfile/include'
 LIBS += -L/usr/local/lib -lsndfile
+
+RESOURCES += \
+    style.qrc
+

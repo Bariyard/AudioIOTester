@@ -74,19 +74,32 @@ void Waveform::dropEvent(QDropEvent *event)
     // check for our needed mime type, here a file or a list of files
     if (mimeData->hasUrls())
     {
-        QString path = QString(mimeData->text());
-        path = path.section('/',2);
-        qDebug() << "Path: " << path;
 
-        m_pAudioPlayer->set_AudioFilePath(path);
-        m_pAudioData    = m_pAudioPlayer->get_AudioData();
-        m_nFrame        = m_pAudioPlayer->get_NumberOfSample();
-        if(!m_RightAudioDataPoint.isEmpty())
-            m_RightAudioDataPoint.clear();
-        if(!m_LeftAudioDataPoint.isEmpty())
-            m_LeftAudioDataPoint.clear();
-        analyzeAudioData();
-        update();
+        //bug drag drop event from xcode6   /.file/id=6571367.2217061
+//        QString path = QString(mimeData->text());
+//        path = path.section('/',2);
+//        qDebug() << "Path: " << path;
+
+//        if (mimeData->hasUrls()) {
+//            QList<QUrl> urlList = mimeData->urls();
+//            QString text;
+//            for (int i = 0; i < urlList.size() && i < 32; ++i) {
+//                QString url = urlList.at(i).path();
+//            }
+//            qDebug() << "text: " << text;
+//        }
+
+
+
+//        m_pAudioPlayer->set_AudioFilePath(path);
+//        m_pAudioData    = m_pAudioPlayer->get_AudioData();
+//        m_nFrame        = m_pAudioPlayer->get_NumberOfSample();
+//        if(!m_RightAudioDataPoint.isEmpty())
+//            m_RightAudioDataPoint.clear();
+//        if(!m_LeftAudioDataPoint.isEmpty())
+//            m_LeftAudioDataPoint.clear();
+//        analyzeAudioData();
+//        update();
     }
 }
 

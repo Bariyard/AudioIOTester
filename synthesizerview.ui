@@ -59,8 +59,6 @@
     </layout>
    </item>
   </layout>
-  <zorder></zorder>
-  <zorder>gridLayoutWidget</zorder>
  </widget>
  <resources/>
  <connections/>
