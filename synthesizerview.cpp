@@ -6,7 +6,12 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     m_pAudioDeviceBase(pAudioDeviceBase)
 {
     ui->setupUi(this);
-    m_pOscillator            = new Oscillator(m_pAudioDeviceBase);
+
+    m_pSynthesizer  = new Synthesizer(m_pAudioDeviceBase);
+    m_pOscillator   = new Oscillator(m_pAudioDeviceBase);
+
+    m_pSynthesizer->RegisterSoundModule(m_pOscillator);
+    m_pAudioDeviceBase->RegisterTestModule(m_pSynthesizer);
 
     //waveform type
     int nWaveformType;
@@ -25,12 +30,17 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     ui->SynthesizerGridLayout->addWidget(m_pFrequencySlider,0,2);
     ui->FrequencyValueLabel->setScaledContents(false);
     UpdateFrequency(m_pOscillator->get_Frequency());
+    ui->Osc1GainHorizontalSlider->setRange(0,100);
+    ui->Osc1GainHorizontalSlider->setValue(m_pOscillator->get_Gain()*100);
+
     //enable oscillator first
     m_pOscillator->eneble();
+    m_pSynthesizer->eneble();
 
     //oscillator
     connect(ui->waveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateWaveformType(int)));
     connect(m_pFrequencySlider, SIGNAL(doubleValueChanged(double)), this, SLOT(UpdateFrequency(double)));
+    connect(ui->Osc1GainHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateGain(int)));
 
 }
 
@@ -38,6 +48,8 @@ SynthesizerView::~SynthesizerView()
 {
     delete ui;
     delete m_pOscillator;
+    delete m_pOscillator2;
+    delete m_pSynthesizer;
 }
 
 //Synthesizer
@@ -59,12 +71,21 @@ void SynthesizerView::UpdateWaveformType(int nType){
     }
 }
 
+void SynthesizerView::UpdateGain(int nGain)
+{
+    if(nGain != m_pOscillator->get_Gain()*100)
+    {
+        qDebug() << "Change Gain Osc1" << nGain;
+        m_pOscillator->put_Gain((double)nGain/100.0);
+    }
+}
+
 void SynthesizerView::Eneble()
 {
-    m_pOscillator->eneble();
+    m_pSynthesizer->eneble();
 }
 
 void SynthesizerView::Disable()
 {
-    m_pOscillator->disable();
+    m_pSynthesizer->disable();
 }

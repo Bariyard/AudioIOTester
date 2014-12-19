@@ -1,11 +1,12 @@
-#ifndef SYNTHESIZER_H
-#define SYNTHESIZER_H
+#ifndef OSCILLATOR_H
+#define OSCILLATOR_H
 #include "audiodevicebase.h"
 #include "testmodule.h"
 
 #define WAVETABLE_SAMPLE_RATE 1024
 #define MINIMUM_FREQUENCY 16.35
 #define MAXIMUM_FREQUENCY 7902.13
+
 
 enum OscillatorType{
     Undefined = 0,
@@ -15,7 +16,7 @@ enum OscillatorType{
     Square   = 4
 };
 
-class Oscillator : public TestModule
+class Oscillator : public SoundModule
 {
 public:
     Oscillator(AudioDeviceBase* pAudioDeviceBase);
@@ -36,11 +37,14 @@ public:
     int                 get_WaveformType();
     void                put_WaveformType(int nType);
     QString*            get_WaveformTypeString();
+    double              get_Gain();
+    void                put_Gain(double gain);
 
 private:
     AudioDeviceBase     *m_pAudioDeviceBase;
     double              m_dblAudioFrequency;
     double              m_dblDefaultAudioFrequency;
+    double              m_dblGain;
 
     //-------------wavetable oscillator------------------- ---
     float               m_fSinArray[WAVETABLE_SAMPLE_RATE];            //sine
@@ -55,4 +59,4 @@ private:
 
 };
 
-#endif // SYNTHESIZER_H
+#endif // OSCILLATOR_H

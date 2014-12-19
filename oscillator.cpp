@@ -1,4 +1,3 @@
-
 #include "Oscillator.h"
 #include <math.h>
 
@@ -10,7 +9,8 @@ QString WAVEFORM_TYPE_STRING[] = {"sin", "saw", "triangle", "square"};
 
 Oscillator::Oscillator(AudioDeviceBase* pAudioDeviceBase):
     m_dblAudioFrequency(220.00),
-    m_dblDefaultAudioFrequency(220.00)
+    m_dblDefaultAudioFrequency(220.00),
+    m_dblGain(1.0)
 {
     m_pAudioDeviceBase  = pAudioDeviceBase;
     m_bIsModuleEnable   = false;
@@ -66,7 +66,7 @@ Oscillator::Oscillator(AudioDeviceBase* pAudioDeviceBase):
         m_fSquareArray[i] = i < 512? +1.0 : -1.0;
     }
 
-    m_pAudioDeviceBase->RegisterTestModule(this);
+    //m_pAudioDeviceBase->RegisterTestModule(this);
 }
 
 Oscillator::~Oscillator()
@@ -149,8 +149,8 @@ void Oscillator::process(const void */*inputBuffer*/, void *outputBuffer, const 
             }
 
             //Hardcoded for stereo 2 channel
-            *out++ += fOutSample;
-            *out++ += fOutSample;
+            *out++ += fOutSample * m_dblGain;
+            *out++ += fOutSample * m_dblGain;
             m_fReadIndex += m_fIncreament;
             if(m_fReadIndex > WAVETABLE_SAMPLE_RATE)m_fReadIndex = m_fReadIndex - WAVETABLE_SAMPLE_RATE;
         }
@@ -185,4 +185,14 @@ void Oscillator::put_WaveformType(int nType)
 QString* Oscillator::get_WaveformTypeString()
 {
     return WAVEFORM_TYPE_STRING;
+}
+
+double Oscillator::get_Gain()
+{
+    return m_dblGain;
+}
+
+void Oscillator::put_Gain(double gain)
+{
+    m_dblGain = gain;
 }

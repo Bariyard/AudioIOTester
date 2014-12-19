@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+class TestModule;
+typedef TestModule SoundModule;
+
 class TestModule : public QObject
 {
     Q_OBJECT
@@ -23,5 +26,9 @@ signals:
 public slots:
 
 };
+
+//class SoundModule : public TestModule {
+
+//};
 
 #endif // TESTMODULE_H

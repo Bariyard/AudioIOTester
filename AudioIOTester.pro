@@ -27,6 +27,7 @@ SOURCES += main.cpp\
     CustomComponent/doubleslider.cpp \
     globalvolumn.cpp \
     synthesizerview.cpp \
+    synthesizer.cpp \
     oscillator.cpp \
     microphoneview.cpp \
     audiofile.cpp
@@ -42,6 +43,7 @@ HEADERS  += mainwindow.h \
     CustomComponent/doubleslider.h \
     globalvolumn.h \
     synthesizerview.h \
+    synthesizer.h \
     oscillator.h \
     microphoneview.h \
     audiofile.h
