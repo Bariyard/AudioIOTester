@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>483</height>
+    <width>553</width>
+    <height>497</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -172,7 +172,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="SynthesizerTab">
         <property name="sizePolicy">
@@ -182,7 +182,7 @@
          </sizepolicy>
         </property>
         <attribute name="title">
-         <string>Oscillator</string>
+         <string>Synthesizer</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
          <property name="leftMargin">

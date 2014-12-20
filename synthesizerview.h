@@ -11,6 +11,10 @@ namespace Ui {
 class SynthesizerView;
 }
 
+enum Test{
+    eFrequencyChange
+};
+
 class SynthesizerView : public QWidget
 {
     Q_OBJECT
@@ -22,11 +26,15 @@ public:
     void Disable();
 
 public slots:
-    //Synthesizer
-    void UpdateFrequency(double dblFreq);
-    void UpdateWaveformType(int nType);
-    void UpdateGain(int nGain);
-
+    //Osc1
+    void UpdateWaveformTypeOsc1(int nType);
+    void UpdateFrequencyOsc1(double dblFreq);
+    void UpdateGainOsc1(int nGain);
+    //Osc2
+    void UpdateWaveformTypeOsc2(int nType);
+    void UpdateFrequencyOsc2(double dblFreq);
+    void UpdateGainOsc2(int nGain);
+    void UpdateEnebleOsc2(bool bIsEneble);
 private:
     Ui::SynthesizerView         *ui;
     AudioDeviceBase             *m_pAudioDeviceBase;
@@ -35,6 +43,7 @@ private:
     Oscillator                  *m_pOscillator2;
 
     DoubleSlider                *m_pFrequencySlider;
+    DoubleSlider                *m_pFrequencySlider2;
 
 };
 
