@@ -5,6 +5,7 @@
 #include "audiodevicebase.h"
 #include "synthesizer.h"
 #include "oscillator.h"
+#include "filter.h"
 #include "CustomComponent/doubleslider.h"
 
 namespace Ui {
@@ -27,20 +28,27 @@ public:
 
 public slots:
     //Osc1
-    void UpdateWaveformTypeOsc1(int nType);
-    void UpdateFrequencyOsc1(double dblFreq);
-    void UpdateGainOsc1(int nGain);
+    void UpdateOsc1WaveformType(int nType);
+    void UpdateOsc1Frequency(double dblFreq);
+    void UpdateOsc1Gain(int nGain);
     //Osc2
-    void UpdateWaveformTypeOsc2(int nType);
-    void UpdateFrequencyOsc2(double dblFreq);
-    void UpdateGainOsc2(int nGain);
-    void UpdateEnebleOsc2(bool bIsEneble);
+    void UpdateOsc2Eneble(bool bIsEneble);
+    void UpdateOsc2WaveformType(int nType);
+    void UpdateOsc2Frequency(double dblFreq);
+    void UpdateOsc2Gain(int nGain);
+    //Filter
+    void UpdateFilterEnable(bool bIsEnable);
+    void UpdateFilterType(int nType);
+    void UpdateFilterCutOffFrequency(int nFreq);
+    void UpdateFilterResonance(int nRes);
+
 private:
     Ui::SynthesizerView         *ui;
     AudioDeviceBase             *m_pAudioDeviceBase;
     Synthesizer                 *m_pSynthesizer;
     Oscillator                  *m_pOscillator;
     Oscillator                  *m_pOscillator2;
+    Filter                      *m_pFilter;
 
     DoubleSlider                *m_pFrequencySlider;
     DoubleSlider                *m_pFrequencySlider2;

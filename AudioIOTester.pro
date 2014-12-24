@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     synthesizer.cpp \
     oscillator.cpp \
     microphoneview.cpp \
-    audiofile.cpp
+    audiofile.cpp \
+    filter.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     synthesizer.h \
     oscillator.h \
     microphoneview.h \
-    audiofile.h
+    audiofile.h \
+    filter.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \

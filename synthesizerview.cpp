@@ -9,13 +9,13 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
 
     m_pSynthesizer  = new Synthesizer(m_pAudioDeviceBase);
     m_pOscillator   = new Oscillator(m_pAudioDeviceBase);
-    m_pOscillator2   = new Oscillator(m_pAudioDeviceBase);
+    m_pOscillator2  = new Oscillator(m_pAudioDeviceBase);
+    m_pFilter       = new Filter(m_pAudioDeviceBase);
 
     m_pSynthesizer->RegisterSoundModule(m_pOscillator);
     m_pSynthesizer->RegisterSoundModule(m_pOscillator2);
+    m_pSynthesizer->RegisterSoundModule(m_pFilter);
     m_pAudioDeviceBase->RegisterTestModule(m_pSynthesizer);
-
-
 
     //Oscillator 1
     //waveform type
@@ -33,13 +33,13 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     m_pFrequencySlider->setScale(16.35,7902.13);
     ui->Osc1SynthesizerGridLayout->addWidget(m_pFrequencySlider,0,2);
     ui->Osc1FrequencyValueLabel->setScaledContents(false);
-    UpdateFrequencyOsc1(m_pOscillator->get_Frequency());
+    UpdateOsc1Frequency(m_pOscillator->get_Frequency());
     ui->Osc1GainHorizontalSlider->setRange(0,100);
     ui->Osc1GainHorizontalSlider->setValue(m_pOscillator->get_Gain()*100);
 
-    connect(ui->Osc1WaveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateWaveformTypeOsc1(int)));
-    connect(m_pFrequencySlider, SIGNAL(doubleValueChanged(double)), this, SLOT(UpdateFrequencyOsc1(double)));
-    connect(ui->Osc1GainHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateGainOsc1(int)));
+    connect(ui->Osc1WaveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateOsc1WaveformType(int)));
+    connect(m_pFrequencySlider, SIGNAL(doubleValueChanged(double)), this, SLOT(UpdateOsc1Frequency(double)));
+    connect(ui->Osc1GainHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateOsc1Gain(int)));
 
     //Oscillator 2
     //waveform type
@@ -55,20 +55,41 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     m_pFrequencySlider2->setScale(16.35,7902.13);
     ui->Osc2SynthesizerGridLayout->addWidget(m_pFrequencySlider2,2,2);
     ui->Osc2FrequencyValueLabel->setScaledContents(false);
-    UpdateFrequencyOsc2(m_pOscillator->get_Frequency());
+    UpdateOsc2Frequency(m_pOscillator->get_Frequency());
     ui->Osc2GainHorizontalSlider->setRange(0,100);
     ui->Osc2GainHorizontalSlider->setValue(m_pOscillator->get_Gain()*100);
 
-    connect(ui->Osc2WaveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateWaveformTypeOsc2(int)));
-    connect(m_pFrequencySlider2, SIGNAL(doubleValueChanged(double)), this, SLOT(UpdateFrequencyOsc2(double)));
-    connect(ui->Osc2GainHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateGainOsc2(int)));
-    connect(ui->Osc2CheckBox, SIGNAL(toggled(bool)), this, SLOT(UpdateEnebleOsc2(bool)));
+    connect(ui->Osc2WaveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateOsc2WaveformType(int)));
+    connect(m_pFrequencySlider2, SIGNAL(doubleValueChanged(double)), this, SLOT(UpdateOsc2Frequency(double)));
+    connect(ui->Osc2GainHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateOsc2Gain(int)));
+    connect(ui->Osc2CheckBox, SIGNAL(toggled(bool)), this, SLOT(UpdateOsc2Eneble(bool)));
 
+    //Filter
+    FilterType eFilterType = m_pFilter->get_FilterType();
+    QString *strFilterType = m_pFilter->get_FilterTypeString();
+    for(int i = 0; i < 2 ; i ++)
+    {
+        ui->FilterTypeComboBox->addItem(strFilterType[i]);
+    }
+    ui->FilterTypeComboBox->setCurrentIndex(eFilterType);
+    ui->FilterCutOffHorizontalSlider->setRange(0,100);
+    ui->FilterCutOffHorizontalSlider->setValue(m_pFilter->get_Frequency());
+    ui->FilterResonanceHorizontalSlider->setRange(0,100);
+    ui->FilterResonanceHorizontalSlider->setValue(m_pFilter->get_Resonance());
+    UpdateFilterCutOffFrequency(m_pFilter->get_Frequency());
+    UpdateFilterResonance(m_pFilter->get_Resonance());
+
+    connect(ui->FilterCheckBox, SIGNAL(toggled(bool)), this, SLOT(UpdateFilterEnable(bool)));
+    connect(ui->FilterTypeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateFilterType(int)));
+    connect(ui->FilterCutOffHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateFilterCutOffFrequency(int)));
+    connect(ui->FilterResonanceHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateFilterResonance(int)));
 
     //enable oscillator first
     m_pOscillator->eneble();
     m_pOscillator2->eneble();
     ui->Osc2CheckBox->setChecked(m_pOscillator2->isEnabled());
+    //m_pFilter->eneble();
+    ui->FilterCheckBox->setChecked(m_pFilter->isEnabled());
     m_pSynthesizer->eneble();
 
 }
@@ -78,70 +99,8 @@ SynthesizerView::~SynthesizerView()
     delete ui;
     delete m_pOscillator;
     delete m_pOscillator2;
+    delete m_pFilter;
     delete m_pSynthesizer;
-}
-
-//Oscillator 1
-void SynthesizerView::UpdateFrequencyOsc1(double dblFreq)
-{
-        qDebug() << "ChangeFrequency: " << dblFreq;
-        m_pOscillator->put_Frequency(dblFreq);
-        QString strFreq = QString::number(dblFreq, 'f', 2);
-        strFreq = strFreq.rightJustified(8,' ') +" Hz";
-        ui->Osc1FrequencyValueLabel->setText(strFreq);
-
-}
-
-void SynthesizerView::UpdateWaveformTypeOsc1(int nType){
-    if(nType != m_pOscillator->get_WaveformType() -1)
-    {
-        qDebug() << "Change Frequency Type" << nType;
-        m_pOscillator->put_WaveformType(nType);
-    }
-}
-
-void SynthesizerView::UpdateGainOsc1(int nGain)
-{
-    if(nGain != m_pOscillator->get_Gain()*100)
-    {
-        qDebug() << "Change Gain Osc1" << nGain;
-        m_pOscillator->put_Gain((double)nGain/100.0);
-    }
-}
-
-//Oscillator 2
-void SynthesizerView::UpdateFrequencyOsc2(double dblFreq)
-{
-        qDebug() << "ChangeFrequency: " << dblFreq;
-        m_pOscillator2->put_Frequency(dblFreq);
-        QString strFreq = QString::number(dblFreq, 'f', 2);
-        strFreq = strFreq.rightJustified(8,' ') +" Hz";
-        ui->Osc2FrequencyValueLabel->setText(strFreq);
-}
-
-void SynthesizerView::UpdateWaveformTypeOsc2(int nType){
-    if(nType != m_pOscillator2->get_WaveformType() -1)
-    {
-        qDebug() << "Change Frequency Type" << nType;
-        m_pOscillator2->put_WaveformType(nType);
-    }
-}
-
-void SynthesizerView::UpdateGainOsc2(int nGain)
-{
-    if(nGain != m_pOscillator2->get_Gain()*100)
-    {
-        qDebug() << "Change Gain Osc1" << nGain;
-        m_pOscillator2->put_Gain((double)nGain/100.0);
-    }
-}
-
-void SynthesizerView::UpdateEnebleOsc2(bool bIsEneble)
-{
-    if(bIsEneble)
-        m_pOscillator2->eneble();
-    else
-        m_pOscillator2->disable();
 }
 
 void SynthesizerView::Eneble()
@@ -152,4 +111,95 @@ void SynthesizerView::Eneble()
 void SynthesizerView::Disable()
 {
     m_pSynthesizer->disable();
+}
+//Oscillator 1
+void SynthesizerView::UpdateOsc1Frequency(double dblFreq)
+{
+        qDebug() << "ChangeFrequency: " << dblFreq;
+        m_pOscillator->put_Frequency(dblFreq);
+        QString strFreq = QString::number(dblFreq, 'f', 2);
+        strFreq = strFreq.rightJustified(8,' ') +" Hz";
+        ui->Osc1FrequencyValueLabel->setText(strFreq);
+
+}
+
+void SynthesizerView::UpdateOsc1WaveformType(int nType){
+    if(nType != m_pOscillator->get_WaveformType() -1)
+    {
+        qDebug() << "Change Frequency Type" << nType;
+        m_pOscillator->put_WaveformType(nType);
+    }
+}
+
+void SynthesizerView::UpdateOsc1Gain(int nGain)
+{
+    if(nGain != m_pOscillator->get_Gain()*100)
+    {
+        qDebug() << "Change Gain Osc1" << nGain;
+        m_pOscillator->put_Gain((double)nGain/100.0);
+    }
+}
+
+//Oscillator 2
+void SynthesizerView::UpdateOsc2Frequency(double dblFreq)
+{
+        qDebug() << "ChangeFrequency: " << dblFreq;
+        m_pOscillator2->put_Frequency(dblFreq);
+        QString strFreq = QString::number(dblFreq, 'f', 2);
+        strFreq = strFreq.rightJustified(8,' ') +" Hz";
+        ui->Osc2FrequencyValueLabel->setText(strFreq);
+}
+
+void SynthesizerView::UpdateOsc2WaveformType(int nType){
+    if(nType != m_pOscillator2->get_WaveformType() -1)
+    {
+        qDebug() << "Change Frequency Type" << nType;
+        m_pOscillator2->put_WaveformType(nType);
+    }
+}
+
+void SynthesizerView::UpdateOsc2Gain(int nGain)
+{
+    if(nGain != m_pOscillator2->get_Gain()*100)
+    {
+        qDebug() << "Change Gain Osc1" << nGain;
+        m_pOscillator2->put_Gain((double)nGain/100.0);
+    }
+}
+
+void SynthesizerView::UpdateOsc2Eneble(bool bIsEneble)
+{
+    if(bIsEneble)
+        m_pOscillator2->eneble();
+    else
+        m_pOscillator2->disable();
+}
+
+void SynthesizerView::UpdateFilterEnable(bool bIsEnable)
+{
+    if(bIsEnable)
+        m_pFilter->eneble();
+    else
+        m_pFilter->disable();
+}
+
+void SynthesizerView::UpdateFilterType(int nType)
+{
+    m_pFilter->put_FilterType(FilterType(nType));
+}
+
+void SynthesizerView::UpdateFilterCutOffFrequency(int nFreq)
+{
+    m_pFilter->put_Frequency(nFreq);
+    QString strFreq = QString::number(nFreq);
+    strFreq = strFreq.rightJustified(8,' ') +" %";
+    ui->FilterCutOffValueLabel->setText(strFreq);
+}
+
+void SynthesizerView::UpdateFilterResonance(int nRes)
+{
+    m_pFilter->put_Resonance(nRes);
+    QString strRes = QString::number(nRes);
+    strRes = strRes.rightJustified(8,' ') +" %";
+    ui->FilterResonanceValueLabel->setText(strRes);
 }
