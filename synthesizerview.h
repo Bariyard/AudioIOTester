@@ -59,6 +59,11 @@ private:
     DoubleSlider                *m_pFrequencySlider;
     DoubleSlider                *m_pFrequencySlider2;
 
+    void                        SetUpOsc1();
+    void                        SetUpOsc2();
+    void                        SetUpFilter();
+    void                        SetUpLFO();
+    void                        Routing();
 };
 
 #endif // SYNTHESIZERVIEW_H
