@@ -6,6 +6,7 @@
 #include "synthesizer.h"
 #include "oscillator.h"
 #include "filter.h"
+#include "lfo.h"
 #include "CustomComponent/doubleslider.h"
 
 namespace Ui {
@@ -41,6 +42,10 @@ public slots:
     void UpdateFilterType(int nType);
     void UpdateFilterCutOffFrequency(int nFreq);
     void UpdateFilterResonance(int nRes);
+    //LFO
+    void UpdateLFOEnable(bool bIsEnable);
+    void UpdateLFOType(int nType);
+    void UpdateLFOFrequency(int nFreq);
 
 private:
     Ui::SynthesizerView         *ui;
@@ -49,6 +54,7 @@ private:
     Oscillator                  *m_pOscillator;
     Oscillator                  *m_pOscillator2;
     Filter                      *m_pFilter;
+    LFO                         *m_pLFO;
 
     DoubleSlider                *m_pFrequencySlider;
     DoubleSlider                *m_pFrequencySlider2;

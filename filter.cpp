@@ -37,9 +37,8 @@ void Filter::process(const void */*inputBuffer*/, void *outputBuffer, const unsi
         for (unsigned int i = 0; i < framesPerBuffer; i++)
         {
             float fOutSample = doFilter(*out);
-            *out = fOutSample; out++;
-            fOutSample = doFilter(*out);
-            *out = fOutSample; out++;
+            *out++ = fOutSample;
+            *out++ = fOutSample;
         }
     }
 }

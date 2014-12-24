@@ -11,10 +11,12 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     m_pOscillator   = new Oscillator(m_pAudioDeviceBase);
     m_pOscillator2  = new Oscillator(m_pAudioDeviceBase);
     m_pFilter       = new Filter(m_pAudioDeviceBase);
+    m_pLFO          = new LFO(m_pAudioDeviceBase);
 
     m_pSynthesizer->RegisterSoundModule(m_pOscillator);
     m_pSynthesizer->RegisterSoundModule(m_pOscillator2);
     m_pSynthesizer->RegisterSoundModule(m_pFilter);
+    m_pSynthesizer->RegisterSoundModule(m_pLFO);
     m_pAudioDeviceBase->RegisterTestModule(m_pSynthesizer);
 
     //Oscillator 1
@@ -84,12 +86,30 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     connect(ui->FilterCutOffHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateFilterCutOffFrequency(int)));
     connect(ui->FilterResonanceHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateFilterResonance(int)));
 
+    //LFO
+    int nLFOWaveformType;
+    nLFOWaveformType = m_pLFO->get_LFOType();
+    QString *strLFOWaveformType = m_pLFO->get_WaveformTypeString();
+    for(int i = 0; i < 4 ; i ++)
+    {
+        ui->LFOWaveformComboBox->addItem(strLFOWaveformType[i]);
+    }
+    ui->LFOFrequencyHorizontalSlider->setRange(20,100);
+    UpdateLFOFrequency(m_pLFO->get_Frequency());
+    UpdateLFOType(m_pLFO->get_LFOType());
+
+    connect(ui->LFOCheckBox, SIGNAL(toggled(bool)), this, SLOT(UpdateLFOEnable(bool)));
+    connect(ui->LFOFrequencyHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateLFOFrequency(int)));
+    connect(ui->LFOWaveformComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateLFOType(int)));
+
     //enable oscillator first
     m_pOscillator->eneble();
     m_pOscillator2->eneble();
     ui->Osc2CheckBox->setChecked(m_pOscillator2->isEnabled());
     //m_pFilter->eneble();
     ui->FilterCheckBox->setChecked(m_pFilter->isEnabled());
+    //m_pLFO->eneble();
+    ui->LFOCheckBox->setChecked(m_pLFO->isEnabled());
     m_pSynthesizer->eneble();
 
 }
@@ -202,4 +222,30 @@ void SynthesizerView::UpdateFilterResonance(int nRes)
     QString strRes = QString::number(nRes);
     strRes = strRes.rightJustified(8,' ') +" %";
     ui->FilterResonanceValueLabel->setText(strRes);
+}
+
+
+void SynthesizerView::UpdateLFOEnable(bool bIsEnable)
+{
+    if(bIsEnable)
+        m_pLFO->eneble();
+    else
+        m_pLFO->disable();
+}
+
+void SynthesizerView::UpdateLFOType(int nType)
+{
+    if(nType != m_pLFO->get_LFOType() -1)
+    {
+        qDebug() << "Change Frequency Type" << nType;
+        m_pLFO->put_LFOType(OscillatorType(nType+1));
+    }
+}
+
+void SynthesizerView::UpdateLFOFrequency(int nFreq)
+{
+    m_pLFO->put_Frequency(nFreq);
+    QString strFreq = QString::number(nFreq, 'f', 2);
+    strFreq = strFreq.rightJustified(8,' ') +" Hz";
+    ui->LFOFrequencyValueLabel->setText(strFreq);
 }

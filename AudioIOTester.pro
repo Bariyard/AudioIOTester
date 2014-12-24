@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     oscillator.cpp \
     microphoneview.cpp \
     audiofile.cpp \
-    filter.cpp
+    filter.cpp \
+    lfo.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -48,7 +49,8 @@ HEADERS  += mainwindow.h \
     oscillator.h \
     microphoneview.h \
     audiofile.h \
-    filter.h
+    filter.h \
+    lfo.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \
