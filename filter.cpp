@@ -38,7 +38,8 @@ void Filter::process(const void */*inputBuffer*/, void *outputBuffer, const unsi
         {
             float fOutSample = doFilter(*out);
             *out++ = fOutSample;
-            *out++ = fOutSample;
+            if(m_pAudioDeviceBase->get_OutputNumChanel() == AudioChannelType::Stereo)
+                *out++ = fOutSample;
         }
     }
 }

@@ -20,7 +20,7 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent, AudioDeviceBase* p
     m_pSynth            = new SynthesizerView(m_pAudioDeviceBase);
     m_pMic              = new MicrophoneView(m_pAudioDeviceBase);
 
-    m_pGlobalVolumn     = new GlobalVolumn(m_pAudioDeviceBase);
+    m_pVolumn     = new Volumn(m_pAudioDeviceBase);
 
     RetriveInformation();
     Connect();
@@ -106,8 +106,8 @@ void AudioPreferenceDialog::RetriveInformation()
     ui->MicrophoneGridLayout->addWidget(m_pMic);
 
     //global volumn
-    ui->TestVolumnHorizontalSlider->setValue(m_pGlobalVolumn->get_GlobalVolumn()*100);
-    m_pGlobalVolumn->eneble();
+    ui->TestVolumnHorizontalSlider->setValue(m_pVolumn->get_Volumn()*100);
+    m_pVolumn->eneble();
 }
 
 void AudioPreferenceDialog::Connect()
@@ -179,7 +179,7 @@ void AudioPreferenceDialog::UpdateGlobalVolumn(int nVolumn)
 {
     qDebug() << "ChangeMicVolumn: " << nVolumn;
     //scale from 0, 100 to 0 to 1
-    m_pGlobalVolumn->set_GlobalVolumn((double)nVolumn / 100.0);
+    m_pVolumn->put_Volumn((double)nVolumn / 100.0);
 }
 
 void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)

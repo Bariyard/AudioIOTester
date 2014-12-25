@@ -25,14 +25,14 @@ SOURCES += main.cpp\
     microphone.cpp \
     amplitudemonitor.cpp \
     CustomComponent/doubleslider.cpp \
-    globalvolumn.cpp \
     synthesizerview.cpp \
     synthesizer.cpp \
     oscillator.cpp \
     microphoneview.cpp \
     audiofile.cpp \
     filter.cpp \
-    lfo.cpp
+    lfo.cpp \
+    volumn.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -43,14 +43,14 @@ HEADERS  += mainwindow.h \
     microphone.h \
     amplitudemonitor.h \
     CustomComponent/doubleslider.h \
-    globalvolumn.h \
     synthesizerview.h \
     synthesizer.h \
     oscillator.h \
     microphoneview.h \
     audiofile.h \
     filter.h \
-    lfo.h
+    lfo.h \
+    volumn.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \

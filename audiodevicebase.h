@@ -10,6 +10,11 @@
 #include "testmodule.h"
 
 
+enum AudioChannelType{
+    Mono    = 1,
+    Stereo  = 2
+};
+
 struct AudioDevice{
     QString strName;
     int     nIndex;
@@ -33,7 +38,8 @@ public:
     double*     get_AvailableBufferSize();
     int         get_SamplingRate();
     int         get_BufferSize();
-
+    int         get_InputNumChanel();
+    int         get_OutputNumChanel();
 
     void put_InputDevice(int nDevice, bool bIsStreamActive = false);
     void put_OutputDevice(int nDevice, bool bIsStreamActive = false);

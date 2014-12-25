@@ -4,7 +4,7 @@
 #include "audiodevicebase.h"
 #include "audioplayer.h"
 #include "waveform.h"
-#include "globalvolumn.h"
+#include "volumn.h"
 
 #include "synthesizerview.h"
 #include "microphoneview.h"
@@ -45,7 +45,7 @@ private:
     //test module
     AudioPlayer                 *m_pAudioPlayer;
     Waveform                    *m_pWaveform;
-    GlobalVolumn                *m_pGlobalVolumn;
+    Volumn                      *m_pVolumn;
 
     SynthesizerView             *m_pSynth;
     MicrophoneView              *m_pMic;

@@ -103,6 +103,21 @@ void Oscillator::reset()
 
 void Oscillator::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
+    if(m_bIsModuleEnable)
+    {
+        float *out = (float*)outputBuffer;
+        for (unsigned int i = 0; i < framesPerBuffer; i++)
+        {
+            float fOutSample = GenerateWaveformSample();
+            *out++ += fOutSample * m_dblGain;
+            if(m_pAudioDeviceBase->get_OutputNumChanel() == AudioChannelType::Stereo)
+                *out++ += fOutSample * m_dblGain;
+        }
+    }
+}
+
+float Oscillator::GenerateWaveformSample()
+{
     //lambda function for calculate linear interpolation
     auto linear_interpolation = [](float x1, float x2, float y1, float y2, float x)
     {
@@ -116,45 +131,36 @@ void Oscillator::process(const void */*inputBuffer*/, void *outputBuffer, const 
         return result;
     };
 
-    if(m_bIsModuleEnable)
-    {
-        float *out = (float*)outputBuffer;
+    float fOutSample = 0.0;
+    int nReadIndex = (int)m_fReadIndex;
+    float fFrac = m_fReadIndex - nReadIndex;   //fractional part
+    int nReadIndexNext = nReadIndex + 1 >1023 ? 0 : nReadIndex +1;
 
-        for (unsigned int i = 0; i < framesPerBuffer; i++) {
-            float fOutSample = 0.0;
-            int nReadIndex = (int)m_fReadIndex;
-            float fFrac = m_fReadIndex - nReadIndex;   //fractional part
-            int nReadIndexNext = nReadIndex + 1 >1023 ? 0 : nReadIndex +1;
-
-            switch (m_eOscType) {
-            case Sinusoid:
-                fOutSample = (float)linear_interpolation(0, 1, m_fSinArray[nReadIndex],
-                                                         m_fSinArray[nReadIndexNext], fFrac);
-                break;
-            case Sawtooth:
-                fOutSample = (float)linear_interpolation(0, 1, m_fSawToothArray[nReadIndex],
-                                                         m_fSawToothArray[nReadIndexNext], fFrac);
-                break;
-            case Triangle:
-                fOutSample = (float)linear_interpolation(0, 1, m_fTriangleArray[nReadIndex],
-                                                         m_fTriangleArray[nReadIndexNext], fFrac);
-                break;
-            case Square:
-                fOutSample = (float)linear_interpolation(0, 1, m_fSquareArray[nReadIndex],
-                                                         m_fSquareArray[nReadIndexNext], fFrac);
-                break;
-            default:
-                fOutSample = 0.0;
-                break;
-            }
-
-            //Hardcoded for stereo 2 channel
-            *out++ += fOutSample * m_dblGain;
-            *out++ += fOutSample * m_dblGain;
-            m_fReadIndex += m_fIncreament;
-            if(m_fReadIndex > WAVETABLE_SAMPLE_RATE)m_fReadIndex = m_fReadIndex - WAVETABLE_SAMPLE_RATE;
-        }
+    switch (m_eOscType) {
+    case Sinusoid:
+        fOutSample = (float)linear_interpolation(0, 1, m_fSinArray[nReadIndex],
+                                                 m_fSinArray[nReadIndexNext], fFrac);
+        break;
+    case Sawtooth:
+        fOutSample = (float)linear_interpolation(0, 1, m_fSawToothArray[nReadIndex],
+                                                 m_fSawToothArray[nReadIndexNext], fFrac);
+        break;
+    case Triangle:
+        fOutSample = (float)linear_interpolation(0, 1, m_fTriangleArray[nReadIndex],
+                                                 m_fTriangleArray[nReadIndexNext], fFrac);
+        break;
+    case Square:
+        fOutSample = (float)linear_interpolation(0, 1, m_fSquareArray[nReadIndex],
+                                                 m_fSquareArray[nReadIndexNext], fFrac);
+        break;
+    default:
+        fOutSample = 0.0;
+        break;
     }
+
+    m_fReadIndex += m_fIncreament;
+    if(m_fReadIndex > WAVETABLE_SAMPLE_RATE)m_fReadIndex = m_fReadIndex - WAVETABLE_SAMPLE_RATE;
+    return fOutSample;
 }
 
 void Oscillator::eneble()
@@ -180,6 +186,7 @@ int Oscillator::get_WaveformType()
 void Oscillator::put_WaveformType(int nType)
 {
     m_eOscType = OscillatorType(nType + 1); //hard code for array index to enum
+    reset();
 }
 
 QString* Oscillator::get_WaveformTypeString()

@@ -237,6 +237,16 @@ int AudioDeviceBase::get_BufferSize()
     return m_nBufferSize;
 }
 
+int AudioDeviceBase::get_InputNumChanel()
+{
+    return m_paInputParameters.channelCount;
+}
+
+int AudioDeviceBase::get_OutputNumChanel()
+{
+    return m_paOutputParameters.channelCount;
+}
+
 void AudioDeviceBase::put_InputDevice(int nDevice, bool bIsStreamActive)
 {
 

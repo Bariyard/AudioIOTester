@@ -154,7 +154,7 @@ void SynthesizerView::UpdateLFOEnable(bool bIsEnable)
 
 void SynthesizerView::UpdateLFOType(int nType)
 {
-    if(nType != m_pLFO->get_LFOType() -1)
+    if(nType + 1 != m_pLFO->get_LFOType() )
     {
         qDebug() << "Change Frequency Type" << nType;
         m_pLFO->put_LFOType(OscillatorType(nType+1));
@@ -201,13 +201,11 @@ void SynthesizerView::SetUpOsc2()
 {
     //Oscillator 2
     //waveform type
-    int nWaveformType = m_pOscillator2->get_WaveformType();
     QString *strWaveformType = m_pOscillator2->get_WaveformTypeString();
     for(int i = 0; i < 4 ; i ++)
     {
         ui->Osc2WaveformComboBox->addItem(strWaveformType[i]);
     }
-    UpdateOsc2WaveformType(nWaveformType);
     m_pFrequencySlider2 = new DoubleSlider();
     m_pFrequencySlider2->setOrientation(Qt::Horizontal);
     m_pFrequencySlider2->setRange(0,100);
@@ -257,9 +255,9 @@ void SynthesizerView::SetUpLFO()
     {
         ui->LFOWaveformComboBox->addItem(strLFOWaveformType[i]);
     }
-    ui->LFOFrequencyHorizontalSlider->setRange(20,100);
+    ui->LFOFrequencyHorizontalSlider->setRange(1,20);
     UpdateLFOFrequency(m_pLFO->get_Frequency());
-    UpdateLFOType(m_pLFO->get_LFOType());
+    UpdateLFOType(m_pLFO->get_LFOType() - 1);
 
     connect(ui->LFOCheckBox, SIGNAL(toggled(bool)), this, SLOT(UpdateLFOEnable(bool)));
     connect(ui->LFOFrequencyHorizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(UpdateLFOFrequency(int)));

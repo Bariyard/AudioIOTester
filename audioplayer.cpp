@@ -61,7 +61,6 @@ bool AudioPlayer::isEnabled()
     return m_bIsModuleEnable;
 }
 
-
 const float* AudioPlayer::get_AudioData()
 {
     return m_pAudioFile->get_StartFrame();

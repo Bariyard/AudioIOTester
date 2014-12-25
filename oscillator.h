@@ -40,6 +40,7 @@ public:
     double              get_Gain();
     void                put_Gain(double gain);
 
+    float               GenerateWaveformSample();
 private:
     AudioDeviceBase     *m_pAudioDeviceBase;
     double              m_dblAudioFrequency;
