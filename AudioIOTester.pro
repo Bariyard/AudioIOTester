@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     audiofile.cpp \
     filter.cpp \
     lfo.cpp \
-    volumn.cpp
+    volumn.cpp \
+    utils.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -50,7 +51,8 @@ HEADERS  += mainwindow.h \
     audiofile.h \
     filter.h \
     lfo.h \
-    volumn.h
+    volumn.h \
+    utils.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \

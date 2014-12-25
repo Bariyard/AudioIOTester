@@ -1,10 +1,11 @@
 #include "lfo.h"
+#include "utils.h"
 
 LFO::LFO(AudioDeviceBase *pAudioDeviceBase)
 {
     m_pAudioDeviceBase  = pAudioDeviceBase;
     m_bIsModuleEnable   = false;
-    m_dblFrequency      = 20;
+    m_dblFrequency      = 2;
     m_eOscillatorType   = OscillatorType::Sinusoid;
     m_pOscillator       = new Oscillator(m_pAudioDeviceBase);
     m_pOscillator->put_Frequency(m_dblFrequency);
@@ -24,10 +25,6 @@ void LFO::reset()
 
 void LFO::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
-    auto scaling = [](double old_min, double old_max, double new_min, double new_max, double old_value)
-    {
-        return (new_max - new_min) / (old_max - old_min) * (old_value - old_min) + new_min;
-    };
     if(m_bIsModuleEnable)
     {
         float *out = (float*)outputBuffer;

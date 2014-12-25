@@ -29,7 +29,6 @@ private:
     Oscillator          *m_pOscillator;
     double              m_dblFrequency;
     OscillatorType      m_eOscillatorType;
-    float               m_fWaveDataArray[WAVETABLE_SAMPLE_RATE*2];
 
 };
 

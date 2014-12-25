@@ -3,6 +3,7 @@
 
 #include <QSlider>
 #include <QDebug>
+#include "../utils.h"
 
 class DoubleSlider : public QSlider
 {
@@ -26,11 +27,6 @@ signals:
 
 public slots:
     void notifyValueChanged(int nValue){
-        auto scaling = [](double old_min, double old_max, double new_min, double new_max, double old_value)
-        {
-            return (new_max - new_min) / (old_max - old_min) * (old_value - old_min) + new_min;
-        };
-
         emit doubleValueChanged(scaling(minimum(), maximum(), m_dblMin, m_dblMax ,nValue));
     }
 

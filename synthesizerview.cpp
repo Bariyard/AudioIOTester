@@ -27,10 +27,10 @@ SynthesizerView::SynthesizerView(AudioDeviceBase* pAudioDeviceBase) :
     ui->Osc2CheckBox->setChecked(m_pOscillator2->isEnabled());
     //m_pFilter->eneble();
     ui->FilterCheckBox->setChecked(m_pFilter->isEnabled());
-    //m_pLFO->eneble();
     ui->LFOCheckBox->setChecked(m_pLFO->isEnabled());
     m_pSynthesizer->eneble();
-
+    ui->tabWidget->removeTab(4);
+//    ui->tab_4->setVisible(false);
 }
 
 SynthesizerView::~SynthesizerView()
@@ -256,6 +256,7 @@ void SynthesizerView::SetUpLFO()
         ui->LFOWaveformComboBox->addItem(strLFOWaveformType[i]);
     }
     ui->LFOFrequencyHorizontalSlider->setRange(1,20);
+    ui->LFOFrequencyHorizontalSlider->setValue(m_pLFO->get_Frequency());
     UpdateLFOFrequency(m_pLFO->get_Frequency());
     UpdateLFOType(m_pLFO->get_LFOType() - 1);
 

@@ -1,5 +1,6 @@
 #include "Oscillator.h"
 #include <math.h>
+#include "utils.h"
 
 #ifndef M_PI
 #define M_PI (3.14159265)
@@ -118,19 +119,6 @@ void Oscillator::process(const void */*inputBuffer*/, void *outputBuffer, const 
 
 float Oscillator::GenerateWaveformSample()
 {
-    //lambda function for calculate linear interpolation
-    auto linear_interpolation = [](float x1, float x2, float y1, float y2, float x)
-    {
-        float denom = x2 - x1;
-        if(denom == 0)
-            return y1; // should never happen
-        // calculate decimal position of x;
-        float dx = (x - x1)/(x2 - x1);
-        // use weighted sum method of interpolating
-        float result = dx*y2 + (1-dx)*y1;
-        return result;
-    };
-
     float fOutSample = 0.0;
     int nReadIndex = (int)m_fReadIndex;
     float fFrac = m_fReadIndex - nReadIndex;   //fractional part
