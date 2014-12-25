@@ -63,10 +63,10 @@ void SynthesizerView::UpdateOsc1Frequency(double dblFreq)
 }
 
 void SynthesizerView::UpdateOsc1WaveformType(int nType){
-    if(nType != m_pOscillator->get_WaveformType() -1)
+    if(nType+1 != m_pOscillator->get_WaveformType())
     {
         qDebug() << "Change Frequency Type" << nType;
-        m_pOscillator->put_WaveformType(nType);
+        m_pOscillator->put_WaveformType(nType +1);
     }
 }
 
@@ -90,10 +90,10 @@ void SynthesizerView::UpdateOsc2Frequency(double dblFreq)
 }
 
 void SynthesizerView::UpdateOsc2WaveformType(int nType){
-    if(nType != m_pOscillator2->get_WaveformType() -1)
+    if(nType + 1 != m_pOscillator2->get_WaveformType())
     {
         qDebug() << "Change Frequency Type" << nType;
-        m_pOscillator2->put_WaveformType(nType);
+        m_pOscillator2->put_WaveformType(nType + 1);
     }
 }
 

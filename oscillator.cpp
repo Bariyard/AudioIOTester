@@ -185,7 +185,7 @@ int Oscillator::get_WaveformType()
 
 void Oscillator::put_WaveformType(int nType)
 {
-    m_eOscType = OscillatorType(nType + 1); //hard code for array index to enum
+    m_eOscType = OscillatorType(nType);
     reset();
 }
 

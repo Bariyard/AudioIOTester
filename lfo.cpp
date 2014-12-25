@@ -24,12 +24,17 @@ void LFO::reset()
 
 void LFO::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
+    auto scaling = [](double old_min, double old_max, double new_min, double new_max, double old_value)
+    {
+        return (new_max - new_min) / (old_max - old_min) * (old_value - old_min) + new_min;
+    };
     if(m_bIsModuleEnable)
     {
         float *out = (float*)outputBuffer;
         for (unsigned int i = 0; i < framesPerBuffer; i++)
         {
             float fOutSample = m_pOscillator->GenerateWaveformSample();
+            fOutSample = scaling(-1, 1, 0, 1 ,fOutSample);
             *out++ *= fOutSample;
             if(m_pAudioDeviceBase->get_OutputNumChanel() == AudioChannelType::Stereo)
                 *out++ *= fOutSample;
