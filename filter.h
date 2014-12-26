@@ -7,9 +7,10 @@
 
 
 enum  FilterType{
-    LowPass = 0,
+    LowPass  = 0,
     HighPass = 1,
-    BandPass = 2
+    BandPass = 2,
+    Notch    = 3
 };
 
 class Filter : public SoundModule
@@ -41,12 +42,14 @@ private:
     FilterType          m_eFilterType;
 
     double              doFilter(const double input);
+    void                doFilter2();
+    float               doBiquad(float input);
 
-    double              m_dblFrequency;
+    double              m_dblCutOffFrequency;
     double              m_dblResonance;
     //filter algorithm variable
-    float              a1, a2, a3, b1, b2, c;
-    float              in1, in2, out1, out2, output, input;
+    float              a0, a1, a2, b1, b2, c;
+    float              in1, in2, out1, out2, output;
     float              pi;
 };
 

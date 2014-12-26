@@ -232,12 +232,12 @@ void SynthesizerView::SetUpFilter()
         ui->FilterTypeComboBox->addItem(strFilterType[i]);
     }
     ui->FilterTypeComboBox->setCurrentIndex(eFilterType);
-    ui->FilterCutOffHorizontalSlider->setRange(0,100);
+    ui->FilterCutOffHorizontalSlider->setRange(100,5000);
     ui->FilterCutOffHorizontalSlider->setValue(m_pFilter->get_Frequency());
     ui->FilterResonanceHorizontalSlider->setRange(0,100);
     ui->FilterResonanceHorizontalSlider->setValue(m_pFilter->get_Resonance());
-    UpdateFilterCutOffFrequency(m_pFilter->get_Frequency());
-    UpdateFilterResonance(m_pFilter->get_Resonance());
+    //UpdateFilterCutOffFrequency(m_pFilter->get_Frequency());
+    //UpdateFilterResonance(m_pFilter->get_Resonance());
 
     connect(ui->FilterCheckBox, SIGNAL(toggled(bool)), this, SLOT(UpdateFilterEnable(bool)));
     connect(ui->FilterTypeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateFilterType(int)));
