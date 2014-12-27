@@ -2,11 +2,10 @@
 #define AUDIOPREFERENCEDIALOG_H
 
 #include "audiodevicebase.h"
-#include "audioplayer.h"
-#include "waveform.h"
 #include "volumn.h"
 
 #include "synthesizerview.h"
+#include "audiofileplayerview.h"
 #include "microphoneview.h"
 #include <QDialog>
 #include <QPointer>
@@ -43,11 +42,10 @@ private:
     bool                        m_bIsTesting;
 
     //test module
-    AudioPlayer                 *m_pAudioPlayer;
-    Waveform                    *m_pWaveform;
     Volumn                      *m_pVolumn;
 
     SynthesizerView             *m_pSynth;
+    AudioFilePlayerView         *m_pFilePlayer;
     MicrophoneView              *m_pMic;
 
     void RetriveInformation();

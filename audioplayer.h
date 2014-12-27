@@ -21,12 +21,18 @@ public:
     const float*        get_AudioData();
     unsigned long       get_NumberOfSample();
     void                set_AudioFilePath(QString strFilePath);
+    void                set_Looping(bool bIsLoop);
+    unsigned long       get_CurrentNumFrame();
 
 private:
     AudioDeviceBase     *m_pAudioDeviceBase;
     AudioFile           *m_pAudioFile;
     float               *m_pCurrentFrame;
+    unsigned long       m_nCurrentNumFrame;
     bool                m_bIsModuleEnable;
+    bool                m_bIsLooping;
+
+    void                CheckCurrentFrame();
 };
 
 #endif // AUDIOPLAYER_H

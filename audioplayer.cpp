@@ -6,6 +6,8 @@ AudioPlayer::AudioPlayer(AudioDeviceBase* pAudioDeviceBase)
 {
     m_pAudioDeviceBase  = pAudioDeviceBase;
     m_bIsModuleEnable   = false;
+    m_bIsLooping        = false;
+    m_nCurrentNumFrame  = 0;
     m_pAudioFile        = new AudioFile();
     m_pAudioDeviceBase->RegisterTestModule(this);
 }
@@ -30,12 +32,12 @@ void AudioPlayer::process(const void */*inputBuffer*/, void *outputBuffer, const
         float *out = (float*)outputBuffer;
         for (unsigned int i = 0; i < framesPerBuffer; i++) {
             if(m_pAudioFile && !m_pAudioFile->IsEndOfFile()){
-                *out++ += *m_pCurrentFrame++;
-                if(m_pCurrentFrame == m_pAudioFile->get_EndFrame())
-                    m_pAudioFile->set_EndOfFile(true);
-                *out++ += *m_pCurrentFrame++;
-                if(m_pCurrentFrame == m_pAudioFile->get_EndFrame())
-                    m_pAudioFile->set_EndOfFile(true);
+                *out++ += *m_pCurrentFrame++; m_nCurrentNumFrame++;
+                CheckCurrentFrame();
+                if(m_pAudioDeviceBase->get_OutputNumChanel() == AudioChannelType::Stereo){
+                    *out++ += *m_pCurrentFrame++; m_nCurrentNumFrame++;
+                    CheckCurrentFrame();
+                }
             }else{
                 *out++ += 0.0;
                 *out++ += 0.0;
@@ -71,6 +73,11 @@ unsigned long AudioPlayer::get_NumberOfSample()
     return m_pAudioFile->get_NumFrame();
 }
 
+unsigned long AudioPlayer::get_CurrentNumFrame()
+{
+    return m_pCurrentFrame;
+}
+
 void AudioPlayer::set_AudioFilePath(QString strFilePath)
 {
     if(m_pAudioFile->get_AudioFilePath() != strFilePath)
@@ -79,5 +86,28 @@ void AudioPlayer::set_AudioFilePath(QString strFilePath)
         audioFile->Open(strFilePath.toLocal8Bit().data());
         m_pAudioFile = audioFile;
         m_pCurrentFrame = m_pAudioFile->get_StartFrame();
+    }
+}
+
+void AudioPlayer::set_Looping(bool bIsLoop)
+{
+    m_bIsLooping = bIsLoop;
+
+    qDebug() << "Set looping: " << QString(bIsLoop?"true":"false");
+    if(m_pAudioFile->IsEndOfFile())
+    {
+        m_pCurrentFrame = m_pAudioFile->get_StartFrame();
+        m_pAudioFile->set_EndOfFile(false);
+    }
+}
+
+void AudioPlayer::CheckCurrentFrame()
+{
+    if(m_pCurrentFrame == m_pAudioFile->get_EndFrame())
+    {
+        if(m_bIsLooping)
+            m_pCurrentFrame = m_pCurrentFrame = m_pAudioFile->get_StartFrame();
+        else
+            m_pAudioFile->set_EndOfFile(true);
     }
 }

@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     filter.cpp \
     lfo.cpp \
     volumn.cpp \
-    utils.cpp
+    utils.cpp \
+    audiofileplayerview.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -52,12 +53,14 @@ HEADERS  += mainwindow.h \
     filter.h \
     lfo.h \
     volumn.h \
-    utils.h
+    utils.h \
+    audiofileplayerview.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \
     synthesizerview.ui \
-    microphoneview.ui
+    microphoneview.ui \
+    audiofileplayerview.ui
 
 #include(3rdParties/portaudio)
 INCLUDEPATH += '3rdParties/portaudio/include'

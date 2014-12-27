@@ -14,10 +14,9 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent, AudioDeviceBase* p
     setWindowTitle(m_strWindowTitle);
 
     m_bIsTesting        = false;
-    m_pAudioPlayer      = new AudioPlayer(m_pAudioDeviceBase);
-    m_pWaveform         = new Waveform(m_pAudioPlayer);
 
     m_pSynth            = new SynthesizerView(m_pAudioDeviceBase);
+    m_pFilePlayer       = new AudioFilePlayerView(m_pAudioDeviceBase);
     m_pMic              = new MicrophoneView(m_pAudioDeviceBase);
 
     m_pVolumn     = new Volumn(m_pAudioDeviceBase);
@@ -29,9 +28,8 @@ AudioPreferenceDialog::AudioPreferenceDialog(QWidget *parent, AudioDeviceBase* p
 
 AudioPreferenceDialog::~AudioPreferenceDialog()
 {
-    delete m_pAudioPlayer;
-    delete m_pWaveform;
     delete m_pSynth;
+    delete m_pFilePlayer;
     delete m_pMic;
     delete ui;
 }
@@ -97,11 +95,10 @@ void AudioPreferenceDialog::RetriveInformation()
 
     UpdateTestModule(ui->TestingTabWidget->currentIndex());
     //Synthesizer tab
-    ui->SyntheSizerGridLayout->addWidget(m_pSynth);
+    ui->SynthesizerGridLayout->addWidget(m_pSynth);
     //Audio player tab
-    ui->AudioPlayerVerticalLayout->addWidget(m_pWaveform);
+    ui->AudioPlayerGridLayout->addWidget(m_pFilePlayer);
     ui->AudioPlayerTab->acceptDrops();
-    m_pWaveform->show();
     //Microphone tab
     ui->MicrophoneGridLayout->addWidget(m_pMic);
 
@@ -195,17 +192,17 @@ void AudioPreferenceDialog::UpdateTestModule(int nCurrentTab)
     {
     case 0:{
         m_pSynth->Eneble();
-        m_pAudioPlayer->disable();
+        m_pFilePlayer->Disable();
         m_pMic->Disable();
         break;}
     case 1:{
         m_pSynth->Disable();
-        m_pAudioPlayer->eneble();
+        m_pFilePlayer->Eneble();
         m_pMic->Disable();
         break;}
     case 2:{
         m_pSynth->Disable();
-        m_pAudioPlayer->disable();
+        m_pFilePlayer->Disable();
         m_pMic->Eneble();
         break;
     }

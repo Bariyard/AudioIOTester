@@ -198,7 +198,7 @@
           <number>5</number>
          </property>
          <item row="0" column="0">
-          <layout class="QGridLayout" name="SyntheSizerGridLayout"/>
+          <layout class="QGridLayout" name="SynthesizerGridLayout"/>
          </item>
         </layout>
        </widget>
@@ -207,8 +207,8 @@
          <string>Audio File Player</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0">
-          <layout class="QVBoxLayout" name="AudioPlayerVerticalLayout"/>
+         <item row="2" column="0">
+          <layout class="QGridLayout" name="AudioPlayerGridLayout"/>
          </item>
         </layout>
        </widget>

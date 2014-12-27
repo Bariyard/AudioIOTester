@@ -13,7 +13,10 @@ public:
 
     void        put_AudioData(const float *audioData);
     void        put_NumFrame(unsigned long numFrame);
+    void        put_CurrentNumFrame(unsigned long numFrame);
+    void        processAudioData();
     void        analyzeAudioData();
+
 signals:
 
 protected:
@@ -33,6 +36,7 @@ private:
     AudioPlayer     *m_pAudioPlayer;
     const float     *m_pAudioData;
     unsigned long   m_nFrame;
+    unsigned long   m_nCurrentFrame;
     QList<QPointF>  m_LeftAudioDataPoint;
     QList<QPointF>  m_RightAudioDataPoint;
 };
