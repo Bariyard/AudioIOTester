@@ -123,7 +123,7 @@ void AudioPreferenceDialog::Connect()
 
 void AudioPreferenceDialog::StartAudioTest(bool bStartTest)
 {
-    qDebug() << "StartTest: " << bStartTest;
+    qDebug() << "StartTest: " << (bStartTest ? "true" : "false");
     if(!m_bIsTesting)
         m_pAudioDeviceBase->StartStream();
     else

@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     lfo.cpp \
     volumn.cpp \
     utils.cpp \
-    audiofileplayerview.cpp
+    audiofileplayerview.cpp \
+    seeker.cpp
 
 HEADERS  += mainwindow.h \
     audiodevicebase.h \
@@ -54,7 +55,8 @@ HEADERS  += mainwindow.h \
     lfo.h \
     volumn.h \
     utils.h \
-    audiofileplayerview.h
+    audiofileplayerview.h \
+    seeker.h
 
 FORMS    += mainwindow.ui \
     audiopreferencedialog.ui \

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "audioplayer.h"
+#include "seeker.h"
 
 class Waveform : public QWidget
 {
@@ -17,8 +18,6 @@ public:
     void        processAudioData();
     void        analyzeAudioData();
 
-signals:
-
 protected:
     void paintEvent(QPaintEvent *event);
     void dragEnterEvent(QDragEnterEvent* event);
@@ -30,15 +29,19 @@ protected:
     void dropEvent(QDropEvent* event);
     //this event is called when the drop operation is initiated at the widget
 
+signals:
+
 public slots:
+    void ChangNotify(unsigned long position);
 
 private:
     AudioPlayer     *m_pAudioPlayer;
     const float     *m_pAudioData;
     unsigned long   m_nFrame;
-    unsigned long   m_nCurrentFrame;
     QList<QPointF>  m_LeftAudioDataPoint;
     QList<QPointF>  m_RightAudioDataPoint;
+
+    Seeker          *m_pSeeker;
 };
 
 #endif // WAVEFORM_H

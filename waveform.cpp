@@ -9,10 +9,12 @@
 
 Waveform::Waveform(AudioPlayer * pAudioPlayer)
 {
+    m_pSeeker       = new Seeker(this);
+    m_pSeeker->setFixedSize(this->size());
     m_pAudioPlayer  = pAudioPlayer;
-    m_nCurrentFrame = 0;
     setBackgroundRole(QPalette::Base);
     setAcceptDrops(true);
+    connect(m_pAudioPlayer, SIGNAL(BufferChange(ulong)), this, SLOT(ChangNotify(ulong)));
 }
 
 Waveform::~Waveform()
@@ -48,16 +50,7 @@ void Waveform::paintEvent(QPaintEvent */*event*/)
                              scaleToMiddle(QPointF(*(stlIter+1)).y(), height()));
             worldX += incrementer;
         }
-        //draw current frame line
-        painter.setPen(Qt::red);
-        painter.drawLine(m_nCurrentFrame * incrementer,
-                         0,
-                         m_nCurrentFrame * incrementer,
-                         height());
     }
-
-
-
 }
 
 void Waveform::dragEnterEvent(QDragEnterEvent* event)
@@ -125,12 +118,6 @@ void Waveform::put_NumFrame(unsigned long numFrame)
     m_nFrame = numFrame;
 }
 
-void Waveform::put_CurrentNumFrame(unsigned long numFrame)
-{
-    m_nCurrentFrame = numFrame;
-    update();
-}
-
 void Waveform::processAudioData()
 {
     m_pAudioData    = m_pAudioPlayer->get_AudioData();
@@ -162,5 +149,14 @@ void Waveform::analyzeAudioData()
             m_RightAudioDataPoint.push_back(QPointF(x2,y2));
             frameCounter+=2;
         }
+
+        //seeker
+        m_pSeeker->put_Incrementer((float)width()/m_pAudioPlayer->get_NumberOfSample());
     }
+}
+
+void Waveform::ChangNotify(unsigned long position)
+{
+    m_pSeeker->put_CurrentNumFrame(position);
+    m_pSeeker->update();
 }

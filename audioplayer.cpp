@@ -24,7 +24,7 @@ void AudioPlayer::reset()
 
 void AudioPlayer::process(const void */*inputBuffer*/, void *outputBuffer, const unsigned long framesPerBuffer)
 {
-    if(m_pAudioFile->IsEndOfFile())
+    if( m_pAudioFile->IsEndOfFile())
         return;
 
     if(m_bIsModuleEnable)
@@ -43,6 +43,7 @@ void AudioPlayer::process(const void */*inputBuffer*/, void *outputBuffer, const
                 *out++ += 0.0;
             }
         }
+        emit BufferChange(m_nCurrentNumFrame);
     }
 }
 
@@ -75,8 +76,9 @@ unsigned long AudioPlayer::get_NumberOfSample()
 
 unsigned long AudioPlayer::get_CurrentNumFrame()
 {
-    return m_pCurrentFrame;
+    return m_nCurrentNumFrame;
 }
+
 
 void AudioPlayer::set_AudioFilePath(QString strFilePath)
 {
@@ -94,10 +96,13 @@ void AudioPlayer::set_Looping(bool bIsLoop)
     m_bIsLooping = bIsLoop;
 
     qDebug() << "Set looping: " << QString(bIsLoop?"true":"false");
-    if(m_pAudioFile->IsEndOfFile())
+    if(m_pAudioFile->get_AudioFilePath() != "")
     {
-        m_pCurrentFrame = m_pAudioFile->get_StartFrame();
-        m_pAudioFile->set_EndOfFile(false);
+        if(m_pAudioFile->IsEndOfFile())
+        {
+                m_pCurrentFrame = m_pAudioFile->get_StartFrame();
+                m_pAudioFile->set_EndOfFile(false);
+        }
     }
 }
 
@@ -106,8 +111,15 @@ void AudioPlayer::CheckCurrentFrame()
     if(m_pCurrentFrame == m_pAudioFile->get_EndFrame())
     {
         if(m_bIsLooping)
-            m_pCurrentFrame = m_pCurrentFrame = m_pAudioFile->get_StartFrame();
+        {
+            m_pCurrentFrame = m_pAudioFile->get_StartFrame();
+            m_nCurrentNumFrame = 0;
+        }
         else
+        {
             m_pAudioFile->set_EndOfFile(true);
+        }
     }
 }
+
+

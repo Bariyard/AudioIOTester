@@ -20,9 +20,10 @@ public:
 
     const float*        get_AudioData();
     unsigned long       get_NumberOfSample();
+    unsigned long       get_CurrentNumFrame();
+
     void                set_AudioFilePath(QString strFilePath);
     void                set_Looping(bool bIsLoop);
-    unsigned long       get_CurrentNumFrame();
 
 private:
     AudioDeviceBase     *m_pAudioDeviceBase;

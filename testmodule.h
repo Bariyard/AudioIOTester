@@ -21,9 +21,10 @@ public:
     virtual void disable() = 0;
     virtual bool isEnabled() = 0;
 
-signals:
 
-public slots:
+signals:
+    void    BufferChange(unsigned long position);
+//public slots:
 
 };
 

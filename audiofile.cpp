@@ -73,3 +73,5 @@ unsigned long AudioFile::get_NumFrame()
 {
     return m_nNumFrame;
 }
+
+
